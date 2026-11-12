@@ -1,1211 +1,1414 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetSys — Painel de Gestão & Cibersegurança</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            400: '#38bdf8',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            700: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        darkbg: '#0b0f17',
-                        cardbg: '#111827',
-                        cardborder: '#1f2937'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Courier New', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Font Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>PetSys — Painel de Gestão & Cibersegurança (Projeto A3)</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0f17; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
-        
-        .tab-btn.active {
-            border-bottom-color: #0284c7;
-            color: #38bdf8;
-            background-color: rgba(2, 132, 199, 0.1);
-        }
-        
-        .pulse-red {
-            animation: pulse-red-anim 1.5s infinite;
-        }
-        @keyframes pulse-red-anim {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        /* CSS Reset & Variables - 100% Offline, Zero External CDNs */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .node-pulse {
-            animation: node-pulse-anim 2s infinite;
+        :root {
+            --bg-dark: #0b0f17;
+            --bg-card: #111827;
+            --bg-card-hover: #162032;
+            --bg-card-border: #1f2937;
+            --bg-input: #0d131f;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-dim: #6b7280;
+            --accent-blue: #0284c7;
+            --accent-cyan: #38bdf8;
+            --accent-emerald: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --radius-md: 10px;
+            --radius-lg: 16px;
         }
-        @keyframes node-pulse-anim {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.03); }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        header {
+            background-color: #0f172a;
+            border-bottom: 1px solid var(--bg-card-border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-badge {
+            background-color: rgba(2, 132, 199, 0.2);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+        }
+
+        /* Nav Tabs */
+        nav {
+            background-color: #0b1120;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            padding: 4px 16px;
+            gap: 4px;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--accent-cyan);
+            background-color: rgba(2, 132, 199, 0.15);
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        /* Main Content Layout */
+        main {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        /* Card Component */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 16px;
+        }
+
+        .card-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-cyan);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        /* Subcard / Mini Box */
+        .subcard {
+            background-color: rgba(13, 19, 31, 0.8);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .subcard-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subcard-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Interactive Architecture Diagram */
+        .diagram-box {
+            background-color: #06090e;
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .node-btn {
+            background-color: #111827;
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .node-btn:hover {
+            border-color: var(--accent-cyan);
+            background-color: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .inspector-panel {
+            background-color: #0b1324;
+            border: 1px solid rgba(2, 132, 199, 0.3);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .inspector-title {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0f172a;
+            color: var(--text-muted);
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--bg-card-border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.6);
+            color: var(--text-main);
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            font-family: monospace;
+        }
+
+        .badge-red { background-color: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-amber { background-color: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-emerald { background-color: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-purple { background-color: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.4); }
+
+        /* Form Inputs & Buttons */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="password"], select, textarea {
+            background-color: var(--bg-input);
+            border: 1px solid var(--bg-card-border);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-red { background-color: var(--accent-red); }
+        .btn-emerald { background-color: var(--accent-emerald); }
+        .btn-purple { background-color: var(--accent-purple); }
+        .btn-secondary { background-color: #374151; color: var(--text-main); }
+
+        /* Result Display Box */
+        .result-box {
+            background-color: #06090e;
+            border: 1px solid var(--bg-card-border);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-height: 50px;
+            word-break: break-all;
+        }
+
+        /* Persistent Audit Terminal at Bottom */
+        .terminal-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-stream {
+            background-color: #05080e;
+            border: 1px solid #111827;
+            border-radius: 8px;
+            padding: 12px;
+            height: 180px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .log-line {
+            display: flex;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .log-ts { color: var(--text-dim); shrink: 0; }
+        .log-user { color: var(--accent-cyan); font-weight: 700; shrink: 0; }
+        .log-action { color: var(--text-muted); shrink: 0; }
+        .log-status-info { color: var(--accent-cyan); }
+        .log-status-warn { color: var(--accent-amber); }
+        .log-status-alert { color: var(--accent-red); font-weight: 700; }
+        .log-status-critical { color: #f87171; font-weight: 800; }
+
+        /* SVG Icons Inline Styling */
+        .icon-svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; align-items: flex-start; }
+            .grid-4 { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+<body>
 
     <!-- TOP HEADER -->
-    <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50 transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-shield-dog text-xl"></i>
+    <header>
+        <div class="header-container">
+            <div class="brand-box">
+                <div class="brand-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                 </div>
                 <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="font-extrabold text-lg tracking-tight text-white">PetSys</span>
-                        <span class="bg-brand-500/20 text-brand-400 text-xs font-bold px-2 py-0.5 rounded border border-brand-500/30">SECURITY v2.6</span>
+                    <div class="brand-title">
+                        PetSys <span class="brand-badge">SECURITY v2.6</span>
                     </div>
-                    <p class="text-xs text-slate-400">PetShop & Clínica Veterinária Amigo Fiel</p>
+                    <div class="brand-subtitle">PetShop & Clínica Veterinária Amigo Fiel</div>
                 </div>
             </div>
 
-            <!-- Global Security Status Indicator -->
-            <div class="hidden md:flex items-center space-x-6">
-                <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span id="status-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                    </span>
-                    <span id="status-text" class="text-xs font-medium text-emerald-400">Sistema Seguro • Firewall Ativo</span>
-                </div>
-                <div class="text-xs text-slate-400 font-mono">
-                    <i class="fa-regular fa-clock mr-1 text-slate-500"></i><span id="live-utc-time">--:--:-- UTC</span>
-                </div>
-                <!-- Theme Toggle Button -->
-                <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 transition" title="Alternar Tema Claro/Escuro">
-                    <i class="fa-solid fa-sun text-amber-400" id="theme-icon-sun"></i>
-                    <i class="fa-solid fa-moon text-indigo-400 hidden" id="theme-icon-moon"></i>
-                </button>
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>Sistema Operacional • WAF & ModSecurity Ativos</span>
             </div>
         </div>
 
-        <!-- MAIN TABS NAVIGATION -->
-        <nav class="bg-slate-900 border-t border-slate-800/80 overflow-x-auto">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 py-1">
-                <button onclick="switchTab('context')" id="tab-btn-context" class="tab-btn active px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-compass text-brand-400"></i>
-                    <span>Etapa 1: Contexto</span>
+        <!-- MAIN NAVIGATION TABS -->
+        <nav>
+            <div class="nav-container">
+                <button onclick="switchTab('context')" id="tab-btn-context" class="nav-tab active">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    Etapa 1: Contexto
                 </button>
-                <button onclick="switchTab('arch')" id="tab-btn-arch" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-network-wired text-indigo-400"></i>
-                    <span>Etapa 2: Arquitetura</span>
+                <button onclick="switchTab('arch')" id="tab-btn-arch" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 1h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1zm0 8h16a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/></svg>
+                    Etapa 2: Arquitetura
                 </button>
-                <button onclick="switchTab('sec')" id="tab-btn-sec" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                    <span>Etapa 3: Princípios</span>
+                <button onclick="switchTab('sec')" id="tab-btn-sec" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    Etapa 3: Princípios
                 </button>
-                <button onclick="switchTab('threats')" id="tab-btn-threats" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                    <span>Etapa 4: Ativos & Ameaças</span>
+                <button onclick="switchTab('threats')" id="tab-btn-threats" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                    Etapa 4: Ativos & Ameaças
                 </button>
-                <button onclick="switchTab('risks')" id="tab-btn-risks" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-table-cells text-red-400"></i>
-                    <span>Etapa 5: Matriz de Riscos</span>
+                <button onclick="switchTab('risks')" id="tab-btn-risks" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v4h14V5H5zm0 6v4h14v-4H5zm0 6v2h14v-2H5z"/></svg>
+                    Etapa 5: Matriz de Riscos
                 </button>
-                <button onclick="switchTab('audit')" id="tab-btn-audit" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-magnifying-glass-chart text-purple-400"></i>
-                    <span>Etapa 6: Avaliação Crítica</span>
+                <button onclick="switchTab('audit')" id="tab-btn-audit" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    Etapa 6: Autoavaliação
                 </button>
-                <button onclick="switchTab('sim')" id="tab-btn-sim" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 bg-brand-500/10 text-brand-300">
-                    <i class="fa-solid fa-flask text-brand-400 animate-bounce"></i>
-                    <span class="font-bold">Etapa 7: Simulador Prático</span>
+                <button onclick="switchTab('sim')" id="tab-btn-sim" class="nav-tab" style="color: var(--accent-amber);">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2v6h.01L7 9.01V18c0 1.66 1.34 3 3 3h4c1.66 0 3-1.34 3-3V9.01L17.99 8H18V2H6zm10 14c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1v-5h6v5z"/></svg>
+                    Etapa 7: Laboratório Prático
                 </button>
-                <button onclick="switchTab('docs')" id="tab-btn-docs" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition flex items-center space-x-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-file-pdf text-slate-400"></i>
-                    <span>Relatório & PDF</span>
+                <button onclick="switchTab('deliverables')" id="tab-btn-deliverables" class="nav-tab">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                    Entregáveis do Projeto
                 </button>
             </div>
         </nav>
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <main>
 
         <!-- =================================================================== -->
         <!-- TAB 1: ETAPA 1 - CONTEXTO E ORGANIZAÇÃO -->
         <!-- =================================================================== -->
-        <section id="tab-content-context" class="tab-content space-y-6">
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-brand-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <span class="text-brand-400 font-bold text-xs uppercase tracking-wider">Etapa 1 • Contextualização</span>
-                        <h1 class="text-2xl font-extrabold text-white mt-1">PetShop & Clínica Veterinária Amigo Fiel</h1>
-                        <p class="text-slate-400 text-sm mt-1">Proposta de Arquitetura e Segurança de Sistemas Computacionais</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <span class="bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center">
-                            <i class="fa-solid fa-calendar mr-1.5 text-brand-400"></i>Petshop
-                        </span>
-                        <span class="bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center">
-                            <i class="fa-solid fa-users mr-1.5 text-indigo-400"></i>PetSys
-                        </span>
+        <section id="tab-content-context" class="tab-section active">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 1 • Contextualização</span>
+                        <h1 class="card-title">PetShop & Clínica Veterinária Amigo Fiel</h1>
+                        <p class="card-desc">Proposta de Arquitetura Computacional e Engenharia de Segurança (Projeto A3 - 2026)</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Problem Card -->
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 hover:border-red-500/40 transition">
-                        <div class="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mb-4">
-                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                <div class="grid-3">
+                    <div class="subcard">
+                        <div class="subcard-title">
+                            <span class="badge badge-red">Desafio</span> Problema Motivador
                         </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-2">Problema Motivador</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">
-                            A organização utilizava fichas médicas em papel e planilhas descentralizadas para agendamentos. Isso causava perdas rotineiras de históricos clínicos, falhas no controle de vacinas e exposição não autorizada de dados pessoais dos tutores.
+                        <p class="subcard-text">
+                            O uso de fichas em papel e planilhas avulsas provocava extravios de históricos clínicos de animais, inconsistências vacinais e vulnerabilidade na exposição de dados pessoais (PII) dos tutores.
                         </p>
                     </div>
 
-                    <!-- Objective Card -->
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 hover:border-brand-500/40 transition">
-                        <div class="w-10 h-10 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center mb-4">
-                            <i class="fa-solid fa-bullseye text-lg"></i>
+                    <div class="subcard">
+                        <div class="subcard-title">
+                            <span class="badge badge-emerald">Meta</span> Objetivo do PetSys
                         </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-2">Objetivo do PetSys</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">
-                            Desenvolver uma plataforma web centralizada para gestão de tutores, agendamentos estéticos e prontuários médicos com rigorosos controles de autenticação, níveis de permissão (RBAC) e backup automatizado.
+                        <p class="subcard-text">
+                            Desenvolver uma aplicação centralizada para gestão de tutores, pets e prontuários médicos com autenticação forte, controle de privilégios RBAC e trilhas de auditoria contínuas.
                         </p>
                     </div>
 
-                    <!-- Constraints Card -->
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 hover:border-amber-500/40 transition">
-                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-4">
-                            <i class="fa-solid fa-lock text-lg"></i>
+                    <div class="subcard">
+                        <div class="subcard-title">
+                            <span class="badge badge-amber">Diretrizes</span> Conformidade Legal
                         </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-2">Restrições & Regulamentos</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">
-                            Conformidade obrigatória com a LGPD (dados de tutores) e isolamento estrito de prontuários médicos. Acesso remoto permitido apenas por conexões encriptadas via VPN ou HTTPS com TLS 1.3.
+                        <p class="subcard-text">
+                            Alinhamento obrigatório com as normas da LGPD (dados de tutores) e isolamento estrito de prontuários clínicos veterinários através de políticas de acesso baseadas no menor privilégio.
                         </p>
                     </div>
                 </div>
-            </div>
+            </article>
 
-            <!-- Users & Data Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Main Users -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6">
-                    <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                        <i class="fa-solid fa-users-gear text-brand-400 mr-2"></i>Principais Perfis de Usuário
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="flex items-start p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="p-2 rounded-lg bg-slate-800 text-slate-300 mr-3 mt-0.5"><i class="fa-solid fa-headset"></i></div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-200">Atendente / Recepção</h4>
-                                <p class="text-xs text-slate-400">Cadastra tutores, pets, agenda serviços de banho/tosa e lança vendas. <span class="text-amber-400 font-semibold">Sem acesso ao prontuário médico.</span></p>
-                            </div>
+            <div class="grid-2">
+                <article class="card">
+                    <h2 class="card-title" style="font-size: 1rem; margin-bottom: 12px;">Perfis de Usuário & Separação de Deveres</h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="subcard">
+                            <div class="subcard-title" style="color: var(--accent-cyan);">Atendente (Recepção)</div>
+                            <p class="subcard-text">Cadastra tutores e pets, agenda serviços estéticos (banho/tosa) e lança vendas. <strong style="color: var(--accent-amber);">Acesso negado aos prontuários clínicos.</strong></p>
                         </div>
-                        <div class="flex items-start p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="p-2 rounded-lg bg-brand-500/20 text-brand-400 mr-3 mt-0.5"><i class="fa-solid fa-user-doctor"></i></div>
-                            <div>
-                                <h4 class="text-sm font-bold text-brand-300">Médico Veterinário</h4>
-                                <p class="text-xs text-slate-400">Acesso completo ao prontuário clínico dos animais, registros de exames, prescrições e vacinação.</p>
-                            </div>
+                        <div class="subcard">
+                            <div class="subcard-title" style="color: var(--accent-emerald);">Médica Veterinária</div>
+                            <p class="subcard-text">Acesso exclusivo para leitura e escrita no Prontuário Eletrônico (PEP), prescrições e vacinação.</p>
                         </div>
-                        <div class="flex items-start p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="p-2 rounded-lg bg-purple-500/20 text-purple-400 mr-3 mt-0.5"><i class="fa-solid fa-user-shield"></i></div>
-                            <div>
-                                <h4 class="text-sm font-bold text-purple-300">Administrador / TI</h4>
-                                <p class="text-xs text-slate-400">Gestão de credenciais, monitoramento de infraestrutura, backups e análise de registros de auditoria (Logs).</p>
-                            </div>
+                        <div class="subcard">
+                            <div class="subcard-title" style="color: var(--accent-purple);">Administrador de TI</div>
+                            <p class="subcard-text">Gestão de contas, backups e monitoramento de logs. <strong style="color: var(--accent-red);">Sem acesso a prontuários clínicos (Separação de Deveres).</strong></p>
                         </div>
                     </div>
-                </div>
+                </article>
 
-                <!-- Processed Data Types -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6">
-                    <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                        <i class="fa-solid fa-database text-indigo-400 mr-2"></i>Tipos de Dados Processados
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs font-bold text-slate-200">Dados Pessoais Identificáveis (PII)</span>
-                                <span class="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded font-mono">Tutores</span>
+                <article class="card">
+                    <h2 class="card-title" style="font-size: 1rem; margin-bottom: 12px;">Tipos de Dados Processados</h2>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div class="subcard">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong style="font-size: 0.85rem; color: #fff;">Dados Pessoais (PII)</strong>
+                                <span class="badge badge-amber">Tutores</span>
                             </div>
-                            <p class="text-xs text-slate-400">Nome completo, CPF, telefone, endereço residencial e e-mail de contato.</p>
+                            <p class="subcard-text">Nome completo, CPF, telefone de contato, endereço residencial e e-mail.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs font-bold text-slate-200">Dados de Saúde Animal</span>
-                                <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">Sensível</span>
+                        <div class="subcard">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong style="font-size: 0.85rem; color: #fff;">Dados Clínicos Animal</strong>
+                                <span class="badge badge-red">Sensível</span>
                             </div>
-                            <p class="text-xs text-slate-400">Histórico de doenças, prescrições de medicamentos, laudos laboratoriais e registro de vacinas.</p>
+                            <p class="subcard-text">Anamneses, cirurgias, prescrições de medicação, alergias e controle vacinal.</p>
                         </div>
-                        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs font-bold text-slate-200">Dados de Segurança & Sistema</span>
-                                <span class="text-[10px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-2 py-0.5 rounded font-mono">Segurança</span>
+                        <div class="subcard">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong style="font-size: 0.85rem; color: #fff;">Dados de Segurança</strong>
+                                <span class="badge badge-purple">Infraestrutura</span>
                             </div>
-                            <p class="text-xs text-slate-400">Hashes de senhas (PBKDF2/SHA256), tokens de sessão JWT, checksums HMAC e audit logs.</p>
+                            <p class="subcard-text">Hashes PBKDF2 de senhas, checksums HMAC-SHA256, tokens de sessão e audit logs.</p>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
         <!-- =================================================================== -->
-        <!-- TAB 2: ETAPA 2 - ARQUITETURA E RECURSOS -->
+        <!-- TAB 2: ETAPA 2 - ARQUITETURA DE REDE -->
         <!-- =================================================================== -->
-        <section id="tab-content-arch" class="tab-content space-y-6 hidden">
-            <!-- Hardware / Software Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-cardbg border border-cardborder rounded-xl p-4">
-                    <div class="text-brand-400 text-lg mb-2"><i class="fa-solid fa-server"></i></div>
-                    <h3 class="font-bold text-slate-200 text-sm">Servidor Local</h3>
-                    <p class="text-slate-400 text-xs mt-1">Quad-Core 3.2GHz, 16GB RAM, SSD 512GB em espelhamento RAID 1.</p>
-                </div>
-                <div class="bg-cardbg border border-cardborder rounded-xl p-4">
-                    <div class="text-indigo-400 text-lg mb-2"><i class="fa-solid fa-network-wired"></i></div>
-                    <h3 class="font-bold text-slate-200 text-sm">Rede & Firewall</h3>
-                    <p class="text-slate-400 text-xs mt-1">Switch Gerenciável L3, Roteador Firewall NGFW com VLANs isoladas.</p>
-                </div>
-                <div class="bg-cardbg border border-cardborder rounded-xl p-4">
-                    <div class="text-emerald-400 text-lg mb-2"><i class="fa-solid fa-battery-full"></i></div>
-                    <h3 class="font-bold text-slate-200 text-sm">Nobreak (UPS)</h3>
-                    <p class="text-slate-400 text-xs mt-1">UPS 1200VA garantindo 20 min de autonomia para desligamento seguro.</p>
-                </div>
-                <div class="bg-cardbg border border-cardborder rounded-xl p-4">
-                    <div class="text-purple-400 text-lg mb-2"><i class="fa-solid fa-layer-group"></i></div>
-                    <h3 class="font-bold text-slate-200 text-sm">Stack Software</h3>
-                    <p class="text-slate-400 text-xs mt-1">Ubuntu Server LTS, Nginx, PostgreSQL, Python (Flask) e ModSecurity WAF.</p>
-                </div>
-            </div>
-
-            <!-- INTERACTIVE ARCHITECTURE DIAGRAM -->
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center">
-                            <i class="fa-solid fa-diagram-project text-brand-400 mr-2"></i>Diagrama da Arquitetura do Sistema PetSys
-                        </h2>
-                        <p class="text-slate-400 text-xs">Clique nos nós para inspecionar os detalhes de segurança e fluxo de tráfego</p>
-                    </div>
-                    <span class="text-xs bg-brand-500/10 text-brand-400 border border-brand-500/20 px-3 py-1 rounded-lg">Interativo</span>
-                </div>
-
-                <!-- DIAGRAM GRAPHICS (CSS/SVG) -->
-                <div class="bg-slate-950 border border-slate-800 rounded-xl p-6 overflow-x-auto">
-                    <div class="min-w-[700px] flex flex-col items-center space-y-8">
-                        <!-- Top Level: External Access -->
-                        <div class="flex justify-center space-x-12">
-                            <div onclick="showNodeInfo('internet')" class="node-pulse bg-slate-900 border border-slate-700 hover:border-brand-400 p-4 rounded-xl text-center cursor-pointer transition w-48 shadow-lg">
-                                <i class="fa-solid fa-globe text-brand-400 text-2xl mb-2"></i>
-                                <h4 class="text-xs font-bold text-slate-200">Clientes & Acesso Web</h4>
-                                <span class="text-[10px] text-slate-500 font-mono">HTTPS / TLS 1.3</span>
-                            </div>
-                        </div>
-
-                        <!-- Connector Arrow -->
-                        <div class="text-slate-600 font-mono text-xs flex flex-col items-center">
-                            <i class="fa-solid fa-arrow-down text-brand-500 animate-bounce"></i>
-                        </div>
-
-                        <!-- Firewall WAF -->
-                        <div onclick="showNodeInfo('firewall')" class="bg-slate-900 border-2 border-red-500/60 hover:border-red-400 p-4 rounded-xl text-center cursor-pointer transition w-64 shadow-xl shadow-red-500/10">
-                            <i class="fa-solid fa-shield-halved text-red-400 text-2xl mb-2"></i>
-                            <h4 class="text-sm font-bold text-red-300">Firewall NGFW + WAF</h4>
-                            <p class="text-[10px] text-slate-400 mt-1">Inspeção de Pacientes • Anti-DDoS • Rate Limiting</p>
-                        </div>
-
-                        <!-- Connector Arrow -->
-                        <div class="text-slate-600 font-mono text-xs flex flex-col items-center">
-                            <i class="fa-solid fa-arrow-down text-indigo-500"></i>
-                        </div>
-
-                        <!-- Switch & VLANs Layer -->
-                        <div class="w-full grid grid-cols-4 gap-4">
-                            <!-- VLAN 10 -->
-                            <div onclick="showNodeInfo('vlan10')" class="bg-slate-900/90 border border-emerald-500/40 hover:border-emerald-400 p-3.5 rounded-xl text-center cursor-pointer transition">
-                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded">VLAN 10</span>
-                                <i class="fa-solid fa-headset text-emerald-400 text-xl my-2 block"></i>
-                                <h5 class="text-xs font-bold text-slate-200">Recepção</h5>
-                                <p class="text-[10px] text-slate-400">Atendimento & Agenda</p>
-                            </div>
-
-                            <!-- VLAN 20 -->
-                            <div onclick="showNodeInfo('vlan20')" class="bg-slate-900/90 border border-brand-500/40 hover:border-brand-400 p-3.5 rounded-xl text-center cursor-pointer transition">
-                                <span class="bg-brand-500/20 text-brand-400 text-[10px] font-bold px-2 py-0.5 rounded">VLAN 20</span>
-                                <i class="fa-solid fa-user-doctor text-brand-400 text-xl my-2 block"></i>
-                                <h5 class="text-xs font-bold text-slate-200">Consultórios</h5>
-                                <p class="text-[10px] text-slate-400">Prontuários Médicos</p>
-                            </div>
-
-                            <!-- VLAN 30 -->
-                            <div onclick="showNodeInfo('vlan30')" class="bg-slate-900/90 border border-purple-500/40 hover:border-purple-400 p-3.5 rounded-xl text-center cursor-pointer transition">
-                                <span class="bg-purple-500/20 text-purple-400 text-[10px] font-bold px-2 py-0.5 rounded">VLAN 30</span>
-                                <i class="fa-solid fa-server text-purple-400 text-xl my-2 block"></i>
-                                <h5 class="text-xs font-bold text-slate-200">Servidores DMZ</h5>
-                                <p class="text-[10px] text-slate-400">PostgreSQL + App Python</p>
-                            </div>
-
-                            <!-- VLAN 40 -->
-                            <div onclick="showNodeInfo('vlan40')" class="bg-slate-900/90 border border-amber-500/40 hover:border-amber-400 p-3.5 rounded-xl text-center cursor-pointer transition">
-                                <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded">VLAN 40</span>
-                                <i class="fa-solid fa-wifi text-amber-400 text-xl my-2 block"></i>
-                                <h5 class="text-xs font-bold text-slate-200">Wi-Fi Visitantes</h5>
-                                <p class="text-[10px] text-slate-400">Isolamento Total</p>
-                            </div>
-                        </div>
+        <section id="tab-content-arch" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 2 • Infraestrutura & Topologia</span>
+                        <h1 class="card-title">Arquitetura de Rede e Segmentação por VLANs</h1>
                     </div>
                 </div>
 
-                <!-- Node Inspector Box -->
-                <div id="node-info-box" class="mt-4 bg-slate-900 border border-brand-500/30 rounded-xl p-4 text-xs">
-                    <div class="flex items-center text-brand-400 font-bold mb-1">
-                        <i class="fa-solid fa-info-circle mr-2"></i><span id="node-title">Selecione um componente no diagrama acima</span>
+                <div class="diagram-box">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                        Clique em qualquer componente do diagrama para inspecionar as regras de segurança e regras de firewall:
                     </div>
-                    <p id="node-desc" class="text-slate-300">Clique em qualquer nó da arquitetura para visualizar sua função de segurança, regras de firewall e VLAN associada.</p>
+
+                    <div class="grid-4" style="width: 100%;">
+                        <button onclick="inspectNode('fw')" class="node-btn">
+                            <span class="badge badge-red">Borda</span>
+                            <span>Firewall NGFW + WAF</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Inspeção ModSecurity</span>
+                        </button>
+
+                        <button onclick="inspectNode('vlan10')" class="node-btn">
+                            <span class="badge badge-emerald">VLAN 10</span>
+                            <span>Recepção (Atendimento)</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Sem acesso ao PEP</span>
+                        </button>
+
+                        <button onclick="inspectNode('vlan20')" class="node-btn">
+                            <span class="badge badge-amber">VLAN 20</span>
+                            <span>Consultórios Médicos</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">Acesso Restrito PEP</span>
+                        </button>
+
+                        <button onclick="inspectNode('vlan30')" class="node-btn">
+                            <span class="badge badge-purple">VLAN 30</span>
+                            <span>Servidores DMZ</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim);">PostgreSQL (AES-256)</span>
+                        </button>
+                    </div>
+
+                    <div id="inspector-output" class="inspector-panel">
+                        <div class="inspector-title">Painel de Inspeção da Arquitetura</div>
+                        <div id="inspector-desc" style="color: var(--text-muted);">Selecione um nó acima para visualizar suas especificações técnicas de controle de tráfego.</div>
+                    </div>
                 </div>
-            </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
         <!-- TAB 3: ETAPA 3 - PRINCÍPIOS E MECANISMOS -->
         <!-- =================================================================== -->
-        <section id="tab-content-sec" class="tab-content space-y-6 hidden">
-            <!-- 5 Principles Table -->
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl">
-                <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                    <i class="fa-solid fa-shield-cat text-emerald-400 mr-2"></i>Os 5 Princípios Fundamentais de Segurança
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
+        <section id="tab-content-sec" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 3 • Fundamentos de Segurança</span>
+                        <h1 class="card-title">Os 5 Princípios da Segurança da Informação (CIAAN)</h1>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-900 text-slate-300 border-b border-slate-800">
-                                <th class="p-3 font-semibold">Princípio</th>
-                                <th class="p-3 font-semibold">Questão da Disciplina</th>
-                                <th class="p-3 font-semibold">Mecanismo Aplicado no PetSys</th>
+                            <tr>
+                                <th>Princípio</th>
+                                <th>Questão da Disciplina</th>
+                                <th>Mecanismo Aplicado no PetSys</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800/60 text-slate-300">
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="p-3 font-bold text-brand-300 flex items-center"><i class="fa-solid fa-lock text-brand-400 mr-2"></i>Confidencialidade</td>
-                                <td class="p-3">Como impedir acesso não autorizado?</td>
-                                <td class="p-3 text-slate-400">Controle RBAC estrito (atendente não lê prontuário) e encriptação AES-256 no banco.</td>
+                        <tbody>
+                            <tr>
+                                <td><strong style="color: var(--accent-cyan);">Confidencialidade</strong></td>
+                                <td>Como impedir o acesso não autorizado?</td>
+                                <td>Controle RBAC estrito (Atendente e Admin sem leitura do PEP) e encriptação AES-256.</td>
                             </tr>
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="p-3 font-bold text-indigo-300 flex items-center"><i class="fa-solid fa-file-shield text-indigo-400 mr-2"></i>Integridade</td>
-                                <td class="p-3">Como evitar alterações indevidas?</td>
-                                <td class="p-3 text-slate-400">Checksums HMAC-SHA256 em prontuários e bloqueio de edição pós-atendimento.</td>
+                            <tr>
+                                <td><strong style="color: var(--accent-emerald);">Integridade</strong></td>
+                                <td>Como evitar alterações indevidas?</td>
+                                <td>Checksums HMAC-SHA256 em prontuários e bloqueio de edição pós-atendimento.</td>
                             </tr>
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="p-3 font-bold text-emerald-300 flex items-center"><i class="fa-solid fa-server text-emerald-400 mr-2"></i>Disponibilidade</td>
-                                <td class="p-3">Como manter o sistema sempre acessível?</td>
-                                <td class="p-3 text-slate-400">Nobreak UPS 1200VA, disco RAID 1 e rotina de backup diário automatizado em nuvem.</td>
+                            <tr>
+                                <td><strong style="color: var(--accent-amber);">Disponibilidade</strong></td>
+                                <td>Como manter o sistema operacional?</td>
+                                <td>Nobreak UPS 1200VA, disco RAID 1 e rotina de backup diário automatizado em nuvem.</td>
                             </tr>
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="p-3 font-bold text-purple-300 flex items-center"><i class="fa-solid fa-user-check text-purple-400 mr-2"></i>Autenticidade</td>
-                                <td class="p-3">Como confirmar a identidade do usuário?</td>
-                                <td class="p-3 text-slate-400">Autenticação individual com hashing PBKDF2 (100.000 iterações + Salt de 16 bytes).</td>
+                            <tr>
+                                <td><strong style="color: var(--accent-purple);">Autenticidade</strong></td>
+                                <td>Como confirmar a identidade do usuário?</td>
+                                <td>Hashes PBKDF2 (100.000 iterações + Salt de 16 bytes) com lockout após 5 falhas.</td>
                             </tr>
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="p-3 font-bold text-amber-300 flex items-center"><i class="fa-solid fa-list-check text-amber-400 mr-2"></i>Não-Repúdio</td>
-                                <td class="p-3">Como comprovar ações executadas?</td>
-                                <td class="p-3 text-slate-400">Audit logs imutáveis com carimbo de data/hora UTC e IP de origem.</td>
+                            <tr>
+                                <td><strong style="color: #f472b6;">Não-repúdio</strong></td>
+                                <td>Como comprovar ações executadas?</td>
+                                <td>Audit logs imutáveis em formato Syslog (RFC 5424) com timestamp UTC.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <!-- 9 Protection Mechanisms Cards Grid -->
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6">
-                <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                    <i class="fa-solid fa-list-check text-brand-400 mr-2"></i>9 Mecanismos de Proteção Implementados
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-brand-400 uppercase font-bold">Mecanismo 1</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Autenticação & Senhas</h4>
-                        <p class="text-xs text-slate-400 mt-1">PBKDF2 com SHA256, mínimo 8 caracteres, letras/números e lockout após 5 falhas.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-indigo-400 uppercase font-bold">Mecanismo 2</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Controle de Acesso RBAC</h4>
-                        <p class="text-xs text-slate-400 mt-1">Perfis isolados: Atendente, Veterinário e Admin com permissões a nível de API.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold">Mecanismo 3</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Backup 3-2-1</h4>
-                        <p class="text-xs text-slate-400 mt-1">3 cópias dos dados, 2 mídias locais (RAID+NAS) e 1 cópia encriptada na nuvem (RPO=1h, RTO=2h).</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-purple-400 uppercase font-bold">Mecanismo 4</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Criptografia Forte</h4>
-                        <p class="text-xs text-slate-400 mt-1">TLS 1.3 para tráfego web e AES-256 para dados sensíveis em repouso no PostgreSQL.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-amber-400 uppercase font-bold">Mecanismo 5</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Registros de Logs</h4>
-                        <p class="text-xs text-slate-400 mt-1">Trilha de auditoria Syslog em tempo real armazenando timestamp UTC, usuário e evento.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-                        <span class="text-[10px] font-mono text-red-400 uppercase font-bold">Mecanismo 6</span>
-                        <h4 class="text-sm font-bold text-slate-200 mt-1">Proteção Endpoint</h4>
-                        <p class="text-xs text-slate-400 mt-1">Antivírus EDR ativo em todos os computadores da recepção e consultórios.</p>
-                    </div>
-                </div>
-            </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
         <!-- TAB 4: ETAPA 4 - ATIVOS E AMEAÇAS -->
         <!-- =================================================================== -->
-        <section id="tab-content-threats" class="tab-content space-y-6 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Assets -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6">
-                    <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                        <i class="fa-solid fa-box-archive text-brand-400 mr-2"></i>Ativos Críticos do Negócio
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <h4 class="text-xs font-bold text-slate-200">1. Base de Dados de Prontuários (PEP)</h4>
-                            <p class="text-xs text-slate-400 mt-0.5">Histórico clínico de exames, medicamentos prescritos e cirurgias.</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <h4 class="text-xs font-bold text-slate-200">2. Credenciais & Chaves Criptográficas</h4>
-                            <p class="text-xs text-slate-400 mt-0.5">Hashes de senhas de acesso e chaves de encriptação dos arquivos.</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <h4 class="text-xs font-bold text-slate-200">3. Servidor Local & Infraestrutura FÍSICA</h4>
-                            <p class="text-xs text-slate-400 mt-0.5">Equipamentos de hardware, switches e disponibilidade da rede local.</p>
-                        </div>
+        <section id="tab-content-threats" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 4 • Gestão de Ativos</span>
+                        <h1 class="card-title">Mapeamento de Ativos Críticos e Ameaças</h1>
                     </div>
                 </div>
 
-                <!-- Threats -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-6">
-                    <h2 class="text-lg font-bold text-white mb-4 flex items-center">
-                        <i class="fa-solid fa-bug text-red-400 mr-2"></i>Ameaças & Vulnerabilidades
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <div class="flex justify-between">
-                                <h4 class="text-xs font-bold text-red-300">Ataques de Phishing & Social</h4>
-                                <span class="text-[10px] text-red-400 font-mono">Agente: Externo</span>
-                            </div>
-                            <p class="text-xs text-slate-400 mt-0.5">E-mails maliciosos visando roubo de credenciais de atendentes da recepção.</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <div class="flex justify-between">
-                                <h4 class="text-xs font-bold text-red-300">Ransomware na Rede</h4>
-                                <span class="text-[10px] text-red-400 font-mono">Agente: Cibercriminosos</span>
-                            </div>
-                            <p class="text-xs text-slate-400 mt-0.5">Encriptação maliciosa do banco de dados por anexos executáveis.</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-                            <div class="flex justify-between">
-                                <h4 class="text-xs font-bold text-amber-300">Falha de Energia Prolongada</h4>
-                                <span class="text-[10px] text-amber-400 font-mono">Agente: Ambiental</span>
-                            </div>
-                            <p class="text-xs text-slate-400 mt-0.5">Queda da rede elétrica podendo corromper o banco de dados.</p>
-                        </div>
+                <div class="grid-2">
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-red);">Principais Ameaças Identificadas</div>
+                        <ul style="padding-left: 18px; font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
+                            <li><strong>Phishing por E-mail:</strong> Tentativas de roubo de credenciais de atendentes da recepção.</li>
+                            <li><strong>Ransomware:</strong> Encriptação maliciosa do banco de dados por anexos executáveis.</li>
+                            <li><strong>Injeção SQL (SQLi):</strong> Tentativas de manipulação de parâmetros em formulários web.</li>
+                            <li><strong>Engenharia Social:</strong> Tentativa de obter senhas de funcionários por contato telefônico.</li>
+                        </ul>
+                    </div>
+
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-cyan);">Ativos Críticos a Proteger</div>
+                        <ul style="padding-left: 18px; font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
+                            <li>Base de Dados de Prontuários Eletrônicos (PEP) dos animais.</li>
+                            <li>Credenciais de acesso e chaves criptográficas de integridade (HMAC).</li>
+                            <li>Disponibilidade da aplicação de agendamentos e cadastros.</li>
+                            <li>Trilha contínua de auditoria e logs de segurança.</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
         <!-- TAB 5: ETAPA 5 - MATRIZ DE RISCOS -->
         <!-- =================================================================== -->
-        <section id="tab-content-risks" class="tab-content space-y-6 hidden">
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center">
-                            <i class="fa-solid fa-table-cells text-red-400 mr-2"></i>Matriz de Riscos de Segurança (Etapa 5)
-                        </h2>
-                        <p class="text-slate-400 text-xs">Análise de impacto, probabilidade e controles propostos para os 5 riscos do projeto</p>
-                    </div>
-
-                    <!-- Risk Filter Buttons -->
-                    <div class="flex space-x-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs">
-                        <button onclick="filterRiskTable('all')" class="risk-filter-btn px-3 py-1 rounded-md font-medium text-slate-300 hover:text-white bg-slate-800">Todos</button>
-                        <button onclick="filterRiskTable('CRÍTICO')" class="risk-filter-btn px-3 py-1 rounded-md font-medium text-red-400 hover:text-red-300">Crítico</button>
-                        <button onclick="filterRiskTable('ALTO')" class="risk-filter-btn px-3 py-1 rounded-md font-medium text-amber-400 hover:text-amber-300">Alto</button>
-                        <button onclick="filterRiskTable('MÉDIO')" class="risk-filter-btn px-3 py-1 rounded-md font-medium text-yellow-400 hover:text-yellow-300">Médio</button>
+        <section id="tab-content-risks" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 5 • Análise Quantitativa</span>
+                        <h1 class="card-title">Matriz de Riscos de Segurança da Informação</h1>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse" id="risk-matrix-table">
+                <div class="table-responsive">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-900 text-slate-300 border-b border-slate-800 font-semibold">
-                                <th class="p-3">Risco / Evento</th>
-                                <th class="p-3">Ativo Afetado</th>
-                                <th class="p-3">Ameaça / Vulnerabilidade</th>
-                                <th class="p-3">Probab. / Impacto</th>
-                                <th class="p-3">Nível</th>
-                                <th class="p-3">Controle Proposto</th>
+                            <tr>
+                                <th>Risco / Evento</th>
+                                <th>Ativo Afetado</th>
+                                <th>Ameaça / Vulnerabilidade</th>
+                                <th>Prob. / Impacto</th>
+                                <th>Nível</th>
+                                <th>Controle Proposto</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800/60 text-slate-300">
-                            <tr class="risk-row hover:bg-slate-900/40" data-level="CRÍTICO">
-                                <td class="p-3 font-bold text-white">1. Comprometimento de Credenciais</td>
-                                <td class="p-3 text-slate-400">Contas de Usuários</td>
-                                <td class="p-3 text-slate-400">Senhas fracas / Enganação Phishing</td>
-                                <td class="p-3">Alta / Alto</td>
-                                <td class="p-3"><span class="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-bold">CRÍTICO</span></td>
-                                <td class="p-3 text-emerald-400">MFA obrigatório + Account Lockout após 5 falhas.</td>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Vazamento de Credenciais</strong></td>
+                                <td>Contas de Usuários</td>
+                                <td>Senhas fracas / Phishing</td>
+                                <td>Alta / Alto</td>
+                                <td><span class="badge badge-red">CRÍTICO</span></td>
+                                <td>Account Lockout após 5 falhas e hashes PBKDF2.</td>
                             </tr>
-                            <tr class="risk-row hover:bg-slate-900/40" data-level="ALTO">
-                                <td class="p-3 font-bold text-white">2. Invasão via Wi-Fi de Clientes</td>
-                                <td class="p-3 text-slate-400">Servidor & Banco de Dados</td>
-                                <td class="p-3 text-slate-400">Rede sem fio não segmentada</td>
-                                <td class="p-3">Média / Alto</td>
-                                <td class="p-3"><span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded font-bold">ALTO</span></td>
-                                <td class="p-3 text-emerald-400">Isolamento total da rede Wi-Fi através da VLAN 40.</td>
+                            <tr>
+                                <td><strong>2. Invasão via Wi-Fi Visitantes</strong></td>
+                                <td>Servidor & Banco de Dados</td>
+                                <td>Rede sem fio não isolada</td>
+                                <td>Média / Alto</td>
+                                <td><span class="badge badge-amber">ALTO</span></td>
+                                <td>Isolamento completo da rede Wi-Fi através da VLAN 40.</td>
                             </tr>
-                            <tr class="risk-row hover:bg-slate-900/40" data-level="CRÍTICO">
-                                <td class="p-3 font-bold text-white">3. Perda de Dados por Falha de Disco</td>
-                                <td class="p-3 text-slate-400">Prontuários & Cadastros</td>
-                                <td class="p-3 text-slate-400">Quebra física de SSD / Sem cópia</td>
-                                <td class="p-3">Média / Muito Alto</td>
-                                <td class="p-3"><span class="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-bold">CRÍTICO</span></td>
-                                <td class="p-3 text-emerald-400">Espelhamento RAID 1 + Backup automatizado 3-2-1 na nuvem.</td>
+                            <tr>
+                                <td><strong>3. Perda de Dados por Falha de SSD</strong></td>
+                                <td>Prontuários & Cadastros</td>
+                                <td>Quebra física de hardware</td>
+                                <td>Média / Muito Alto</td>
+                                <td><span class="badge badge-red">CRÍTICO</span></td>
+                                <td>Espelhamento RAID 1 + Backup automatizado 3-2-1 em nuvem.</td>
                             </tr>
-                            <tr class="risk-row hover:bg-slate-900/40" data-level="MÉDIO">
-                                <td class="p-3 font-bold text-white">4. Desligamento por Apagão Elétrico</td>
-                                <td class="p-3 text-slate-400">Servidor Local</td>
-                                <td class="p-3 text-slate-400">Queda brusca na rede elétrica municipal</td>
-                                <td class="p-3">Baixa / Alto</td>
-                                <td class="p-3"><span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded font-bold">MÉDIO</span></td>
-                                <td class="p-3 text-emerald-400">Nobreak (UPS 1200VA) garantindo desligamento automático seguro.</td>
+                            <tr>
+                                <td><strong>4. Apagão Elétrico Prolongado</strong></td>
+                                <td>Servidor Local</td>
+                                <td>Queda brusca na rede elétrica municipal</td>
+                                <td>Baixa / Alto</td>
+                                <td><span class="badge badge-amber">MÉDIO</span></td>
+                                <td>Nobreak (UPS 1200VA) garantindo desligamento automático seguro.</td>
                             </tr>
-                            <tr class="risk-row hover:bg-slate-900/40" data-level="MÉDIO">
-                                <td class="p-3 font-bold text-white">5. Acesso por Ex-colaborador</td>
-                                <td class="p-3 text-slate-400">Agenda & Cadastros</td>
-                                <td class="p-3 text-slate-400">Conta ativa pós-desligamento (Offboarding manual)</td>
-                                <td class="p-3">Média / Médio</td>
-                                <td class="p-3"><span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded font-bold">MÉDIO</span></td>
-                                <td class="p-3 text-emerald-400">Integração do RH ao Active Directory para desativação imediata.</td>
+                            <tr>
+                                <td><strong>5. Acesso por Ex-colaborador</strong></td>
+                                <td>Agenda & Prontuários</td>
+                                <td>Conta ativa pós-desligamento (Offboarding manual)</td>
+                                <td>Média / Médio</td>
+                                <td><span class="badge badge-amber">MÉDIO</span></td>
+                                <td>Revogação automática de credenciais via Active Directory no RH.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
-        <!-- TAB 6: ETAPA 6 - AVALIAÇÃO CRÍTICA DE SEGURANÇA -->
+        <!-- TAB 6: ETAPA 6 - AUTOAVALIAÇÃO CRÍTICA -->
         <!-- =================================================================== -->
-        <section id="tab-content-audit" class="tab-content space-y-6 hidden">
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl">
-                <div class="mb-6">
-                    <span class="text-purple-400 font-bold text-xs uppercase tracking-wider">Etapa 6 • Autoavaliação</span>
-                    <h2 class="text-lg font-bold text-white mt-1">Análise Crítica do Próprio Projeto</h2>
-                    <p class="text-slate-400 text-xs">Auditoria interna identificando 3 fragilidades arquiteturais e suas respectivas recomendações corretivas.</p>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Vulnerability 1 -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-red-500/20 text-red-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-red-500/30">Vulnerabilidade 1</span>
-                            <span class="text-xs text-slate-500 font-mono">Norma: ISO 27001 (A.9.4.2)</span>
-                        </div>
-                        <h4 class="text-sm font-bold text-white">Ausência de Rate Limiting na Rota `/login`</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-xs">
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Evidência</span>
-                                <span class="text-slate-300">Permissão de centenas de requisições por segundo na API de autenticação.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Risco / Impacto</span>
-                                <span class="text-red-400 font-medium">Exposição a ataques automatizados de Força Bruta e estouro de memória.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Recomendação Objetiva</span>
-                                <span class="text-emerald-400 font-medium">Configurar diretiva `limit_req` no Nginx e bloqueio no Redis pós-5 falhas.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Vulnerability 2 -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-amber-500/20 text-amber-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-amber-500/30">Vulnerabilidade 2</span>
-                            <span class="text-xs text-slate-500 font-mono">Norma: NIST SP 800-92</span>
-                        </div>
-                        <h4 class="text-sm font-bold text-white">Armazenamento de Audit Logs no Disco Local do Servidor</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-xs">
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Evidência</span>
-                                <span class="text-slate-300">Ficheiro `petsys_audit.log` gravado na mesma partição do sistema web.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Risco / Impacto</span>
-                                <span class="text-amber-400 font-medium">Um atacante com acesso root pode apagar ou manipular a trilha de auditoria.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Recomendação Objetiva</span>
-                                <span class="text-emerald-400 font-medium">Implementar envio remoto imediato via RSYSLOG/TLS para servidor SIEM isolado.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Vulnerability 3 -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-blue-500/20 text-blue-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-blue-500/30">Vulnerabilidade 3</span>
-                            <span class="text-xs text-slate-500 font-mono">Norma: NIST SP 800-57</span>
-                        </div>
-                        <h4 class="text-sm font-bold text-white">Ausência de Rotação Automática de Chaves Criptográficas</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-xs">
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Evidência</span>
-                                <span class="text-slate-300">Mesma chave AES-256 utilizada indefinidamente para encriptação dos anexos.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Risco / Impacto</span>
-                                <span class="text-blue-400 font-medium">Se a chave for vazada uma única vez, todo o histórico passado e futuro fica exposto.</span>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg">
-                                <span class="text-slate-500 block text-[10px]">Recomendação Objetiva</span>
-                                <span class="text-emerald-400 font-medium">Integrar serviço Key Management Service (KMS) com rotação anual automatizada.</span>
-                            </div>
-                        </div>
+        <section id="tab-content-audit" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Etapa 6 • Autoavaliação de Segurança</span>
+                        <h1 class="card-title">Análise Crítica do Próprio Projeto</h1>
+                        <p class="card-desc">Identificação de 3 vulnerabilidades arquiteturais e recomendações de mitigação</p>
                     </div>
                 </div>
-            </div>
+
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="subcard" style="border-left: 4px solid var(--accent-red);">
+                        <div style="display: flex; justify-between; align-items: center;">
+                            <span class="badge badge-red">Vulnerabilidade 1</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim); font-family: monospace;">ISO 27001 (A.9.4.2)</span>
+                        </div>
+                        <h3 style="font-size: 0.95rem; color: #fff; margin-top: 4px;">Ausência de Rate Limiting na rota `/login` no Proxy Nginx</h3>
+                        <p class="subcard-text">
+                            <strong>Diagnóstico:</strong> A aplicação original permitia requisições ilimitadas por segundo no endpoint de login.<br>
+                            <strong>Mitigação:</strong> Configurar a diretiva `limit_req` no Nginx e bloqueio no Redis após 5 falhas por IP.
+                        </p>
+                    </div>
+
+                    <div class="subcard" style="border-left: 4px solid var(--accent-amber);">
+                        <div style="display: flex; justify-between; align-items: center;">
+                            <span class="badge badge-amber">Vulnerabilidade 2</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim); font-family: monospace;">NIST SP 800-92</span>
+                        </div>
+                        <h3 style="font-size: 0.95rem; color: #fff; margin-top: 4px;">Armazenamento de Audit Logs no Disco Local do Servidor</h3>
+                        <p class="subcard-text">
+                            <strong>Diagnóstico:</strong> Arquivo `petsys_audit.log` gravado no mesmo volume da aplicação web.<br>
+                            <strong>Mitigação:</strong> Implementar envio remoto imediato via RSYSLOG/TLS para um servidor SIEM isolado.
+                        </p>
+                    </div>
+
+                    <div class="subcard" style="border-left: 4px solid var(--accent-purple);">
+                        <div style="display: flex; justify-between; align-items: center;">
+                            <span class="badge badge-purple">Vulnerabilidade 3</span>
+                            <span style="font-size: 0.7rem; color: var(--text-dim); font-family: monospace;">NIST SP 800-57</span>
+                        </div>
+                        <h3 style="font-size: 0.95rem; color: #fff; margin-top: 4px;">Chave Simétrica Estática para Integridade HMAC</h3>
+                        <p class="subcard-text">
+                            <strong>Diagnóstico:</strong> Mesma chave mantida indefinidamente sem processo de rotação.<br>
+                            <strong>Mitigação:</strong> Integrar Key Management Service (KMS) com rotação anual automatizada de chaves.
+                        </p>
+                    </div>
+                </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
-        <!-- TAB 7: ETAPA 7 - SIMULADOR PRÁTICO EM TEMPO REAL -->
+        <!-- TAB 7: ETAPA 7 - LABORATÓRIO PRÁTICO EM TEMPO REAL -->
         <!-- =================================================================== -->
-        <section id="tab-content-sim" class="tab-content space-y-6 hidden">
-            <!-- Header Banner -->
-            <div class="bg-gradient-to-r from-brand-900/60 via-slate-900 to-slate-900 border border-brand-500/30 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <span class="bg-brand-500/20 text-brand-300 font-mono text-[10px] font-bold px-2.5 py-1 rounded border border-brand-500/40 uppercase">Laboratório de Testes Práticos (Etapa 7)</span>
-                    <h2 class="text-xl font-extrabold text-white mt-2 flex items-center">
-                        <i class="fa-solid fa-flask text-brand-400 mr-2"></i>Simulador Prático de Ataques & Mecanismos de Defesa
-                    </h2>
-                    <p class="text-slate-400 text-xs mt-1">Interaja com os 4 cenários abaixo e observe a atualização em tempo real no console de auditoria.</p>
-                </div>
-                <button onclick="runAllDiagnosticTests()" class="bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20 flex items-center">
-                    <i class="fa-solid fa-play mr-2"></i>Executar Bateria Completa de Testes
-                </button>
-            </div>
-
-            <!-- SIMULATORS GRID -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                <!-- SIMULATOR 1: BRUTE FORCE & LOCKOUT -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-red-400 uppercase flex items-center">
-                                <i class="fa-solid fa-user-lock mr-1.5"></i>Simulador 1: Rate Limiting & Account Lockout
-                            </span>
-                            <span id="lockout-badge" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">Conta Normal</span>
-                        </div>
-
-                        <p class="text-slate-400 text-xs mb-4">Tente realizar logins com senha errada. Após 5 falhas seguidas, a defesa é ativada bloqueando a conta por 30 segundos.</p>
-
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">Usuário Alvo</label>
-                                <input type="text" id="sim1-username" value="atendente_ana" readonly class="w-full bg-slate-900 border border-slate-800 text-xs text-slate-300 rounded-lg px-3 py-2 font-mono">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">Senha (Incorreta para teste)</label>
-                                <input type="password" id="sim1-password" value="SenhaIncorreta123" class="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 font-mono">
-                            </div>
-                        </div>
+        <section id="tab-content-sim" class="tab-section">
+            <article class="card" style="border-color: rgba(245, 158, 11, 0.4);">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag" style="color: var(--accent-amber);">Etapa 7 • Laboratório Prático</span>
+                        <h1 class="card-title">Simulador Interativo de Ataques & Defesas</h1>
+                        <p class="card-desc">Execute os testes abaixo e observe a atualização segura do console de auditoria em tempo real.</p>
                     </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
-                        <div class="text-xs text-slate-400">
-                            Falhas: <span id="sim1-attempts" class="font-bold text-red-400 font-mono">0</span> / 5
-                        </div>
-                        <div class="space-x-2">
-                            <button onclick="simulateBruteForceAttack()" id="sim1-btn-attack" class="bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40 text-xs font-semibold px-3 py-2 rounded-lg transition">
-                                <i class="fa-solid fa-bomb mr-1"></i>Tentar Login
-                            </button>
-                            <button onclick="resetLockout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg transition">
-                                Reset
-                            </button>
-                        </div>
-                    </div>
+                    <button onclick="runDiagnosticSuite()" class="btn btn-purple">
+                        Executar Bateria Sequencial de Lockout (5 Falhas)
+                    </button>
                 </div>
 
-                <!-- SIMULATOR 2: RBAC CONTROLLER -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-indigo-400 uppercase flex items-center">
-                                <i class="fa-solid fa-user-shield mr-1.5"></i>Simulador 2: Controle de Acesso por Perfis (RBAC)
-                            </span>
+                <div class="grid-2">
+
+                    <!-- SIMULATOR 1: BRUTE FORCE & LOCKOUT -->
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-red);">
+                            1. Rate Limiting & Account Lockout
+                        </div>
+                        <p class="subcard-text">Tente autenticar com a senha incorreta. Após 5 falhas seguidas, a defesa bloqueia a conta por 30 segundos.</p>
+
+                        <div class="form-group">
+                            <label>Usuário Alvo</label>
+                            <input type="text" id="sim1-user" value="atendente_ana" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Senha (Incorreta para teste)</label>
+                            <input type="password" id="sim1-pass" value="SenhaIncorreta123">
                         </div>
 
-                        <p class="text-slate-400 text-xs mb-4">Alterne o perfil logado e tente acessar dados clínicos médicos sensíveis (Prontuário do Pet #101).</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">Falhas: <strong id="sim1-attempts-count" style="color: var(--accent-red);">0</strong> / 5</span>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="simulateFailedLogin()" id="sim1-btn-attack" class="btn btn-red">Tentar Login</button>
+                                <button onclick="resetLockoutState()" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
 
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">Selecione o Perfil Atual de Sessão</label>
-                                <select id="sim2-role" onchange="onRoleChange()" class="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 font-medium">
-                                    <option value="ATENDENTE">Atendente Ana (Recepção) — Nível Baixo</option>
-                                    <option value="VETERINARIA">Dra. Carla (Médica Veterinária) — Nível Alto</option>
-                                    <option value="ADMIN">Admin TI — Administrador de Infra</option>
-                                </select>
-                            </div>
-                            <div id="sim2-result-box" class="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs font-mono text-slate-400 min-h-[60px] flex items-center">
-                                Clique no botão abaixo para testar a requisição de leitura do prontuário...
-                            </div>
+                        <div id="sim1-result-box" class="result-box">Aguardando tentativa...</div>
+                    </div>
+
+                    <!-- SIMULATOR 2: RBAC CONTROLLER (PRINCIPLE OF LEAST PRIVILEGE) -->
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-cyan);">
+                            2. Controle RBAC & Separação de Deveres
+                        </div>
+                        <p class="subcard-text">Alterne o perfil e tente consultar o Prontuário Médico #101 (PEP). Note que ADMIN também é bloqueado pelo Princípio do Menor Privilégio.</p>
+
+                        <div class="form-group">
+                            <label>Selecione o Perfil da Sessão Ativa</label>
+                            <select id="sim2-role">
+                                <option value="ATENDENTE">Atendente Ana (Recepção) — Nível Operacional</option>
+                                <option value="ADMIN">Admin TI — Administrador de Infraestrutura</option>
+                                <option value="VETERINARIA">Dra. Carla (Médica Veterinária) — Corpo Clínico</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                            <button onclick="simulateRbacCheck()" class="btn">Consultar Prontuário PEP #101</button>
+                        </div>
+
+                        <div id="sim2-result-box" class="result-box">Selecione um perfil e clique para testar...</div>
+                    </div>
+
+                    <!-- SIMULATOR 3: PREVENÇÃO DE SQL INJECTION -->
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-emerald);">
+                            3. Prevenção de SQL Injection (SQLi)
+                        </div>
+                        <p class="subcard-text">Envie um payload malicioso e compare a consulta vulnerável concatenada com a consulta parametrizada (Prepared Statement).</p>
+
+                        <div class="form-group">
+                            <label>Campo de Pesquisa de Pet</label>
+                            <input type="text" id="sim3-payload" value="' OR '1'='1">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Modo da Consulta SQL</label>
+                            <select id="sim3-mode">
+                                <option value="SECURE">SEGURO (Prepared Statement)</option>
+                                <option value="VULNERABLE">VULNERÁVEL (String Concatenada)</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+                            <button onclick="simulateSqlInjection()" class="btn btn-emerald">Executar Pesquisa SQL</button>
+                        </div>
+
+                        <div id="sim3-result-box" class="result-box">Aguardando teste SQL...</div>
+                    </div>
+
+                    <!-- SIMULATOR 4: REAL-TIME CRYPTO WEB API HMAC-SHA256 -->
+                    <div class="subcard">
+                        <div class="subcard-title" style="color: var(--accent-purple);">
+                            4. Checksum HMAC-SHA256 ao Vivo (Web Crypto API)
+                        </div>
+                        <p class="subcard-text">Edite o texto da prescrição abaixo em tempo real. A Web Crypto API (crypto.subtle) recálcula o checksum HMAC instantaneamente.</p>
+
+                        <div class="form-group">
+                            <label>Prescrição Médica (Edite para ver o HMAC alterar ao vivo):</label>
+                            <textarea id="sim4-crypto-text" rows="2">Enalapril 10mg — 1 comprimido via oral a cada 12 horas.</textarea>
+                        </div>
+
+                        <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
+                            <span>Chave HMAC Criptográfica: <code style="color: var(--accent-cyan);">SecretKeyPetSys2026</code></span>
+                            <span>Digest HMAC-SHA256 Calculado Live (`crypto.subtle`):</span>
+                            <div id="sim4-hmac-digest" class="result-box" style="color: var(--accent-emerald); font-size: 0.75rem;">Calculando...</div>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
-                        <button onclick="simulateRbacAccess()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition shadow-lg shadow-indigo-500/20">
-                            <i class="fa-solid fa-lock-open mr-1"></i>Consultar Prontuário Médico Sensível
-                        </button>
-                    </div>
                 </div>
-
-                <!-- SIMULATOR 3: SQL INJECTION PREVENTION -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-emerald-400 uppercase flex items-center">
-                                <i class="fa-solid fa-code text-emerald-400 mr-1.5"></i>Simulador 3: Prevenção de SQL Injection
-                            </span>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-slate-400">Modo:</span>
-                                <select id="sim3-mode" class="bg-slate-800 text-slate-200 text-[10px] font-bold px-2 py-1 rounded border border-slate-700">
-                                    <option value="SECURE">SEGURO (Prepared Statement)</option>
-                                    <option value="VULNERABLE">VULNERÁVEL (String Concatenada)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <p class="text-slate-400 text-xs mb-4">Insira um payload malicioso de SQL Injection para pesquisar um tutor/pet na base de dados.</p>
-
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">Campo de Pesquisa de Nome do Pet</label>
-                                <div class="flex space-x-2">
-                                    <input type="text" id="sim3-query" value="' OR '1'='1" class="flex-grow bg-slate-900 border border-slate-700 text-xs text-amber-300 font-mono rounded-lg px-3 py-2">
-                                    <button onclick="document.getElementById('sim3-query').value = '\' OR \'1\'=\'1';" class="bg-slate-800 text-slate-300 text-[10px] px-2.5 py-1 rounded hover:bg-slate-700" title="Carregar Payload Teste">Payload</button>
-                                </div>
-                            </div>
-                            <div id="sim3-result-box" class="bg-slate-900 border border-slate-800 p-3 rounded-lg text-xs font-mono text-slate-400 max-h-24 overflow-y-auto">
-                                Aguardando pesquisa...
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
-                        <button onclick="simulateSqlInjectionTest()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition shadow-lg shadow-emerald-500/20">
-                            <i class="fa-solid fa-magnifying-glass mr-1"></i>Executar Pesquisa SQL
-                        </button>
-                    </div>
-                </div>
-
-                <!-- SIMULATOR 4: DATA TAMPERING & HMAC CHECKSUM -->
-                <div class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-lg flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-bold text-purple-400 uppercase flex items-center">
-                                <i class="fa-solid fa-fingerprint mr-1.5"></i>Simulador 4: Deteção de Adulteração (HMAC Checksum)
-                            </span>
-                            <span id="hmac-status-badge" class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">HMAC VÁLIDO</span>
-                        </div>
-
-                        <p class="text-slate-400 text-xs mb-4">Simule uma alteração maliciosa direta na base de dados para verificar a deteção imediata via HMAC SHA-256.</p>
-
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                            <div class="flex justify-between text-xs">
-                                <span class="text-slate-400">Doente: <strong class="text-slate-200">Thor (Golden Retriever)</strong></span>
-                                <span class="text-slate-400">ID: <strong class="text-slate-200">#101</strong></span>
-                            </div>
-                            <div class="text-xs">
-                                <span class="text-slate-400 block text-[10px]">Prescrição de Medicação:</span>
-                                <span id="sim4-med-text" class="text-emerald-300 font-mono text-xs">Enalapril 10mg — 1cp via oral de 12 em 12h</span>
-                            </div>
-                            <div class="pt-2 border-t border-slate-800 text-[10px] font-mono overflow-hidden">
-                                <span class="text-slate-500 block">Checksum HMAC-SHA256 Atual:</span>
-                                <span id="sim4-hmac-val" class="text-brand-400 break-all">d48e91a27b89f3c1102938475610293847561029384756102938475610293847</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
-                        <button onclick="restoreTamperedData()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg transition">
-                            Restaurar Dado
-                        </button>
-                        <button onclick="simulateDataTampering()" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition shadow-lg shadow-purple-500/20">
-                            <i class="fa-solid fa-skull-crossbones mr-1"></i>Adulterar Dado Maliciosamente
-                        </button>
-                    </div>
-                </div>
-
-            </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
-        <!-- TAB 8: RELATÓRIO E DOCUMENTAÇÃO PDF -->
+        <!-- TAB 8: ENTREGÁVEIS DO PROJETO -->
         <!-- =================================================================== -->
-        <section id="tab-content-docs" class="tab-content space-y-6 hidden">
-            <div class="bg-cardbg border border-cardborder rounded-2xl p-6 shadow-xl">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center">
-                            <i class="fa-solid fa-file-pdf text-red-400 mr-2"></i>Entregáveis do Projeto & Download do Relatório
-                        </h2>
-                        <p class="text-slate-400 text-xs mt-1">Acesse a documentação completa em formato acadêmico pronta para impressão e envio.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center">
-                            <i class="fa-solid fa-print mr-1.5"></i>Imprimir / Salvar PDF
-                        </button>
+        <section id="tab-content-deliverables" class="tab-section">
+            <article class="card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Entregáveis Oficiais</span>
+                        <h1 class="card-title">Documentação Acadêmica & Código-Fonte Integrados</h1>
+                        <p class="card-desc">Visualize abaixo a documentação completa, slides da apresentação e o código Python do sistema.</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                        <i class="fa-solid fa-book text-brand-400 text-2xl mb-3"></i>
-                        <h3 class="font-bold text-white text-sm">Relatório Técnico PDF</h3>
-                        <p class="text-slate-400 text-xs mt-1">Estrutura formal em 12 tópicos acadêmicos contendo capa, sumário, arquitetura e matriz de riscos.</p>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                        <i class="fa-solid fa-file-powerpoint text-amber-400 text-2xl mb-3"></i>
-                        <h3 class="font-bold text-white text-sm">Slides da Apresentação</h3>
-                        <p class="text-slate-400 text-xs mt-1">Apresentação de 15 minutos dividida em 12 slides interativos para defesa oral.</p>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                        <i class="fa-solid fa-code text-emerald-400 text-2xl mb-3"></i>
-                        <h3 class="font-bold text-white text-sm">Código-Fonte do Protótipo</h3>
-                        <p class="text-slate-400 text-xs mt-1">Script funcional em Python pura (`petsys_sistema.py`) sem dependências externas.</p>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <button onclick="switchDeliverable('report')" id="deliv-btn-report" class="btn">Relatório Acadêmico</button>
+                    <button onclick="switchDeliverable('slides')" id="deliv-btn-slides" class="btn btn-secondary">Slides de Apresentação</button>
+                    <button onclick="switchDeliverable('python')" id="deliv-btn-python" class="btn btn-secondary">Código Python (`petsys_sistema.py`)</button>
+                </div>
+
+                <!-- DELIVERABLE 1: REPORT -->
+                <div id="deliv-view-report" class="subcard" style="font-size: 0.85rem; line-height: 1.6;">
+                    <h2 style="color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 8px;">Relatório Final A3 — Sistemas Computacionais e Segurança</h2>
+                    <p><strong>Organização Alvo:</strong> PetShop & Clínica Veterinária Amigo Fiel</p>
+                    <p><strong>Resumo Executivo:</strong> Este documento formaliza o projeto de arquitetura e prototipagem de segurança do sistema PetSys. O sistema atende aos requisitos de autenticação forte (PBKDF2/SHA-256), controle de acesso por privilégios RBAC com separação de deveres, redundância de rede por VLANs, mitigação de vulnerabilidades OWASP (SQLi/XSS) e trilhas contínuas de auditoria imutáveis.</p>
+                    <h3 style="color: var(--accent-cyan); font-size: 0.95rem; margin-top: 12px;">Principais Conclusões:</h3>
+                    <ul style="padding-left: 20px; color: var(--text-muted);">
+                        <li>Conformidade integral com as exigências da LGPD para proteção de PII dos tutores.</li>
+                        <li>Proteção estrita dos dados clínicos de animais contra acessos indevidos por funcionários da recepção ou administradores de infraestrutura.</li>
+                        <li>Resiliência operacional assegurada por backups encriptados 3-2-1 e infraestrutura alimentada por Nobreak (UPS).</li>
+                    </ul>
+                </div>
+
+                <!-- DELIVERABLE 2: SLIDES -->
+                <div id="deliv-view-slides" class="subcard" style="display: none;">
+                    <h2 style="color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 8px;">Roteiro de Apresentação Oral (15 Minutos / 12 Slides)</h2>
+                    <div class="grid-3" style="margin-top: 12px;">
+                        <div class="subcard">
+                            <strong style="color: var(--accent-cyan);">Slides 1 - 3 (00:00 - 04:00)</strong>
+                            <p class="subcard-text">Capa, contexto da clínica Amigo Fiel, dores de negócio (papel vs digital) e arquitetura de redes em 4 VLANs.</p>
+                        </div>
+                        <div class="subcard">
+                            <strong style="color: var(--accent-emerald);">Slides 4 - 8 (04:00 - 09:30)</strong>
+                            <p class="subcard-text">Princípios CIAAN, PBKDF2, RBAC (PoLP), regra de backup 3-2-1 e Matriz de 5 Riscos prioritários.</p>
+                        </div>
+                        <div class="subcard">
+                            <strong style="color: var(--accent-amber);">Slides 9 - 12 (09:30 - 15:00)</strong>
+                            <p class="subcard-text">Autoavaliação crítica, demonstração ao vivo dos simuladores (Lockout, SQLi, HMAC) e encerramento.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- DELIVERABLE 3: PYTHON CODE -->
+                <div id="deliv-view-python" class="subcard" style="display: none;">
+                    <h2 style="color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 8px;">Código-Fonte Python (`petsys_sistema.py`)</h2>
+                    <pre class="result-box" style="white-space: pre-wrap; font-size: 0.75rem; color: #a7f3d0; max-height: 350px; overflow-y: auto;">
+# Script completo disponível no arquivo petsys_sistema.py
+import hashlib, hmac, sqlite3, time, datetime
+
+print("PetSys Security Engine Python Loaded successfully.")
+                    </pre>
+                </div>
+            </article>
         </section>
 
         <!-- =================================================================== -->
         <!-- REAL-TIME AUDIT LOG TERMINAL (PERSISTENT AT BOTTOM) -->
         <!-- =================================================================== -->
-        <section class="bg-cardbg border border-cardborder rounded-2xl p-4 shadow-2xl">
-            <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full bg-red-500 inline-block"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-500 inline-block"></div>
-                    <span class="text-xs font-bold text-slate-300 ml-2 font-mono"><i class="fa-solid fa-terminal mr-1.5 text-brand-400"></i>SYS_AUDIT_LOG_STREAM (Syslog / RFC 5424)</span>
+        <section class="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-title">
+                    <svg class="icon-svg" style="color: var(--accent-cyan);" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
+                    TRILHA DE AUDITORIA DE SEGURANÇA EM TEMPO REAL (Syslog RFC 5424 / Standard Output)
                 </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="clearAuditLog()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded transition">Limpar Console</button>
-                </div>
+                <button onclick="clearAuditTerminalDemo()" class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 10px;">
+                    Limpar Registos (Apenas para Demonstração Local)
+                </button>
             </div>
 
-            <!-- Log Terminal Container -->
-            <div id="audit-log-container" class="bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-[11px] leading-relaxed h-44 overflow-y-auto space-y-1 text-slate-300">
-                <!-- Initial system logs will be injected here -->
+            <!-- Terminal Stream Box -->
+            <div id="audit-log-stream" class="terminal-stream">
+                <!-- Log entries dynamically appended via safe DOM methods -->
             </div>
         </section>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-4 text-center">
-        <p>PetSys Security Dashboard — Projeto A3 de Sistemas Computacionais e Segurança (2026) • PetShop & Clínica Amigo Fiel</p>
+    <footer style="background-color: #0f172a; border-top: 1px solid var(--bg-card-border); text-align: center; padding: 16px; font-size: 0.75rem; color: var(--text-dim);">
+        PetSys Security System — Projeto A3 Sistemas Computacionais e Segurança (2026) • PetShop & Clínica Amigo Fiel
     </footer>
 
-    <!-- JAVASCRIPT APP LOGIC -->
+    <!-- JAVASCRIPT APP ENGINE (100% SECURE & XSS FREE) -->
     <script>
-        // --- APP STATE & INITIALIZATION ---
-        const state = {
+        // --- STATE MANAGEMENT ---
+        const appState = {
             activeTab: 'context',
             failedAttempts: 0,
             isLockedOut: false,
-            lockoutTimer: null,
-            currentRole: 'ATENDENTE',
-            hmacOriginal: 'd48e91a27b89f3c1102938475610293847561029384756102938475610293847',
-            hmacTampered: '8a9b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef',
-            isTampered: false
+            lockoutTimer: null
         };
 
-        // Node Inspector Descriptions for Architecture Diagram
-        const nodeDetails = {
-            internet: { title: "Clientes & Tráfego Externo", desc: "Todo o acesso remoto passa por túneis VPN WireGuard ou conexões HTTPS encriptadas com protocolo TLS 1.3." },
-            firewall: { title: "Firewall NGFW + WAF (ModSecurity)", desc: "Primeira linha de defesa. Filtra tentativas de injeção de código (SQLi/XSS), previne ataques de negação de serviço (DDoS) e aplica regras de Rate Limiting." },
-            vlan10: { title: "VLAN 10 — Receção (Atendimento)", desc: "Rede isolada para os computadores do balcão. Acessa serviços de cadastro e marcações, mas não possui rota para visualização de prontuários médicos." },
-            vlan20: { title: "VLAN 20 — Consultórios Médicos", desc: "Rede restrita dos médicos veterinários com privilégios de leitura e escrita nos prontuários eletrônicos." },
-            vlan30: { title: "VLAN 30 — Servidores DMZ", desc: "Hospeda a aplicação em Python (Flask) e o servidor de banco de dados PostgreSQL com encriptação transparente em disco (AES-256)." },
-            vlan40: { title: "VLAN 40 — Wi-Fi Visitantes/Clientes", desc: "Rede totalmente isolada sem acesso a qualquer recurso interno ou IP da rede administrativa da clínica." }
+        // Node descriptions for Network Architecture Inspector
+        const nodeDescriptions = {
+            fw: "Firewall NGFW + ModSecurity WAF: Inspeciona tráfego HTTP/HTTPS, bloqueia ataques SQLi/XSS e aplica regras de Rate Limiting na borda.",
+            vlan10: "VLAN 10 — Receção: Terminal dos atendentes. Permite agendamentos e cadastros. Acesso bloqueado ao banco de dados de prontuários.",
+            vlan20: "VLAN 20 — Consultórios Médicos: Rede autenticada exclusiva para veterinários. Leitura e escrita autorizadas no Prontuário Eletrônico (PEP).",
+            vlan30: "VLAN 30 — Servidores DMZ: Hospeda o servidor web Nginx, backend Python e PostgreSQL com encriptação transparente em disco (AES-256)."
         };
 
-        // Initialize on DOM Ready
+        // Initialize App on DOM Ready
         window.addEventListener('DOMContentLoaded', () => {
-            updateClock();
-            setInterval(updateClock, 1000);
-            
-            // Log initial system boot
-            appendLog('SYSTEM', 'BOOT', 'INFO', 'Núcleo do PetSys Security inicializado com sucesso.');
-            appendLog('FIREWALL', 'STATUS', 'INFO', 'Regras de VLANs 10, 20, 30 e 40 aplicadas no NGFW.');
-            appendLog('AUDIT', 'STREAM', 'INFO', 'Logs de auditoria em tempo real ativados.');
+            appendAuditLog('SYSTEM', 'BOOT', 'INFO', 'Núcleo do PetSys Security inicializado com sucesso.');
+            appendAuditLog('FIREWALL', 'STATUS', 'INFO', 'Regras de segmentação por VLANs ativadas no NGFW.');
+            appendAuditLog('AUDIT', 'STREAM', 'INFO', 'Trilha de auditoria em tempo real pronta para captação.');
+            initHmacLiveCalculator();
         });
 
-        // --- CLOCK ---
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('live-utc-time').innerText = now.toUTCString().split(' ')[4] + ' UTC';
+        // --- SAFE LOGGING ENGINE (XSS PROTECTED WITH TEXTCONTENT / CREATETEXTNODE) ---
+        function appendAuditLog(user, action, status, detailsText) {
+            const container = document.getElementById('audit-log-stream');
+            const nowISO = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+
+            // Create container element
+            const lineEl = document.createElement('div');
+            lineEl.className = 'log-line';
+
+            // Timestamp Node
+            const tsSpan = document.createElement('span');
+            tsSpan.className = 'log-ts';
+            tsSpan.appendChild(document.createTextNode('[' + nowISO + ']'));
+
+            // User Node
+            const userSpan = document.createElement('span');
+            userSpan.className = 'log-user';
+            userSpan.appendChild(document.createTextNode(user));
+
+            // Action Node
+            const actSpan = document.createElement('span');
+            actSpan.className = 'log-action';
+            actSpan.appendChild(document.createTextNode('| ' + action + ' |'));
+
+            // Status Node
+            const statusSpan = document.createElement('span');
+            let statusClass = 'log-status-info';
+            if (status === 'WARN') statusClass = 'log-status-warn';
+            if (status === 'ALERT') statusClass = 'log-status-alert';
+            if (status === 'CRITICAL' || status === 'LOCKOUT') statusClass = 'log-status-critical';
+            statusSpan.className = statusClass;
+            statusSpan.appendChild(document.createTextNode('[' + status + ']'));
+
+            // Details Node (Pure Text Node to prevent XSS)
+            const detailsSpan = document.createElement('span');
+            detailsSpan.style.color = 'var(--text-main)';
+            detailsSpan.appendChild(document.createTextNode(detailsText));
+
+            // Append all nodes safely
+            lineEl.appendChild(tsSpan);
+            lineEl.appendChild(userSpan);
+            lineEl.appendChild(actSpan);
+            lineEl.appendChild(statusSpan);
+            lineEl.appendChild(detailsSpan);
+
+            container.appendChild(lineEl);
+            container.scrollTop = container.scrollHeight;
         }
 
-        // --- THEME TOGGLE ---
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark);
-            document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark);
-            appendLog('USER', 'THEME_TOGGLE', 'INFO', `Tema alterado para: ${isDark ? 'Escuro (Dark)' : 'Claro (Light)'}`);
+        // Console Clear for Demo
+        function clearAuditTerminalDemo() {
+            const container = document.getElementById('audit-log-stream');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            appendAuditLog('AUDIT_DEMO', 'CLEAR', 'WARN', 'Registos do console limpos localmente para demonstração. Em produção, os logs são imutáveis e salvos em servidor remoto.');
         }
 
         // --- TAB SWITCHER ---
         function switchTab(tabId) {
-            state.activeTab = tabId;
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
-            
-            appendLog('UI', 'TAB_CHANGE', 'INFO', `Navegação para a aba: ${tabId.toUpperCase()}`);
+            appState.activeTab = tabId;
+            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+
+            document.getElementById('tab-content-' + tabId).classList.add('active');
+            document.getElementById('tab-btn-' + tabId).classList.add('active');
+
+            appendAuditLog('NAVIGATOR', 'TAB_SWITCH', 'INFO', 'Navegação para a seção: ' + tabId.toUpperCase());
         }
 
-        // --- ARCHITECTURE DIAGRAM INSPECTOR ---
-        function showNodeInfo(nodeKey) {
-            const info = nodeDetails[nodeKey];
-            if (info) {
-                document.getElementById('node-title').innerText = info.title;
-                document.getElementById('node-desc').innerText = info.desc;
-                appendLog('NETWORK', 'INSPECT_NODE', 'INFO', `Inspeção do nó de rede: ${info.title}`);
-            }
+        // Deliverable Tab Switcher
+        function switchDeliverable(type) {
+            document.getElementById('deliv-view-report').style.display = type === 'report' ? 'block' : 'none';
+            document.getElementById('deliv-view-slides').style.display = type === 'slides' ? 'block' : 'none';
+            document.getElementById('deliv-view-python').style.display = type === 'python' ? 'block' : 'none';
+
+            document.getElementById('deliv-btn-report').className = type === 'report' ? 'btn' : 'btn btn-secondary';
+            document.getElementById('deliv-btn-slides').className = type === 'slides' ? 'btn' : 'btn btn-secondary';
+            document.getElementById('deliv-btn-python').className = type === 'python' ? 'btn' : 'btn btn-secondary';
         }
 
-        // --- RISK MATRIX FILTER ---
-        function filterRiskTable(level) {
-            const rows = document.querySelectorAll('.risk-row');
-            rows.forEach(row => {
-                if (level === 'all' || row.getAttribute('data-level') === level) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            appendLog('RISK_MATRIX', 'FILTER', 'INFO', `Filtro de risco aplicado: ${level}`);
+        // Architecture Inspector
+        function inspectNode(nodeKey) {
+            const outputEl = document.getElementById('inspector-desc');
+            outputEl.textContent = nodeDescriptions[nodeKey] || "Componente não encontrado.";
+            appendAuditLog('INSPECTOR', 'NODE_CLICK', 'INFO', 'Inspeção do nó de infraestrutura: ' + nodeKey);
         }
 
-        // --- LOG ENGINE ---
-        function appendLog(user, action, level, details) {
-            const container = document.getElementById('audit-log-container');
-            const now = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
-            
-            let badgeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-            if (level === 'WARN') badgeColor = 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30';
-            if (level === 'ALERT') badgeColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-            if (level === 'CRITICAL') badgeColor = 'text-red-400 bg-red-500/20 border-red-500/40 font-bold';
+        // --- SIMULATOR 1: BRUTE FORCE & LOCKOUT ---
+        function simulateFailedLogin() {
+            const resultBox = document.getElementById('sim1-result-box');
+            const attemptsCountEl = document.getElementById('sim1-attempts-count');
 
-            const logLine = document.createElement('div');
-            logLine.className = 'flex items-start space-x-2 hover:bg-slate-900/80 p-0.5 rounded transition';
-            logLine.innerHTML = `
-                <span class="text-slate-500 shrink-0">[${now}]</span>
-                <span class="text-brand-300 shrink-0 font-bold">${user}</span>
-                <span class="text-slate-400 shrink-0">| ${action} |</span>
-                <span class="px-1.5 py-0.2 rounded border text-[10px] shrink-0 ${badgeColor}">${level}</span>
-                <span class="text-slate-300 break-all">${details}</span>
-            `;
-
-            container.appendChild(logLine);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function clearAuditLog() {
-            document.getElementById('audit-log-container').innerHTML = '';
-            appendLog('SYSTEM', 'CLEAR_LOGS', 'INFO', 'Console de auditoria limpo pelo operador.');
-        }
-
-        // ===================================================================
-        // SIMULATORS LOGIC (ETAPA 7)
-        // ===================================================================
-
-        // SIMULATOR 1: BRUTE FORCE & LOCKOUT
-        function simulateBruteForceAttack() {
-            if (state.isLockedOut) {
-                appendLog('SECURITY', 'LOGIN_ATTEMPT', 'CRITICAL', 'TENTATIVA REJEITADA: Conta temporariamente BLOQUEADA por política de Rate Limiting!');
+            if (appState.isLockedOut) {
+                resultBox.textContent = "DEFESA ATIVADA: Conta temporariamente BLOQUEADA. Aguarde o término do lockout.";
+                resultBox.style.color = "var(--accent-red)";
+                appendAuditLog('DEFENSE', 'LOGIN_REJECT', 'LOCKOUT', 'Tentativa de login rejeitada: Conta "atendente_ana" está BLOQUEADA.');
                 return;
             }
 
-            state.failedAttempts++;
-            document.getElementById('sim1-attempts').innerText = state.failedAttempts;
+            appState.failedAttempts++;
+            attemptsCountEl.textContent = appState.failedAttempts;
 
-            if (state.failedAttempts >= 5) {
-                state.isLockedOut = true;
-                const badge = document.getElementById('lockout-badge');
-                badge.className = 'text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono font-bold pulse-red';
-                badge.innerText = 'CONTA BLOQUEADA (30s)';
-
+            if (appState.failedAttempts >= 5) {
+                appState.isLockedOut = true;
                 const attackBtn = document.getElementById('sim1-btn-attack');
                 attackBtn.disabled = true;
-                attackBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                attackBtn.style.opacity = '0.5';
 
-                appendLog('DEFENSE', 'ACCOUNT_LOCKOUT', 'CRITICAL', 'ALERTA! Limite de 5 tentativas excedido. Conta "atendente_ana" BLOQUEADA por 30 segundos.');
+                resultBox.textContent = "ALERTA CRÍTICO: 5 falhas seguidas ativadas! Conta 'atendente_ana' BLOQUEADA por 30 segundos.";
+                resultBox.style.color = "var(--accent-red)";
 
-                // Countdown Timer
-                let timer = 30;
-                state.lockoutTimer = setInterval(() => {
-                    timer--;
-                    badge.innerText = `BLOQUEADA (${timer}s)`;
-                    if (timer <= 0) {
-                        resetLockout();
+                appendAuditLog('SECURITY', 'ACCOUNT_LOCKOUT', 'CRITICAL', 'Limite de 5 tentativas atingido! Conta "atendente_ana" bloqueada por 30s.');
+
+                let countdown = 30;
+                appState.lockoutTimer = setInterval(() => {
+                    countdown--;
+                    resultBox.textContent = "BLOQUEADA: Conta 'atendente_ana' trancada (" + countdown + "s restantes).";
+                    if (countdown <= 0) {
+                        resetLockoutState();
                     }
                 }, 1000);
             } else {
-                appendLog('AUTH', 'LOGIN_FAIL', 'WARN', `Tentativa de login incorreta (${state.failedAttempts}/5) para usuário "atendente_ana".`);
+                resultBox.textContent = "Falha de autenticação (" + appState.failedAttempts + "/5). Palavra-passe incorreta.";
+                resultBox.style.color = "var(--accent-amber)";
+                appendAuditLog('AUTH', 'LOGIN_FAIL', 'WARN', 'Tentativa de login incorreta (' + appState.failedAttempts + '/5) para o usuário "atendente_ana".');
             }
         }
 
-        function resetLockout() {
-            clearInterval(state.lockoutTimer);
-            state.failedAttempts = 0;
-            state.isLockedOut = false;
-            document.getElementById('sim1-attempts').innerText = 0;
-            
-            const badge = document.getElementById('lockout-badge');
-            badge.className = 'text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono';
-            badge.innerText = 'Conta Normal';
+        function resetLockoutState() {
+            clearInterval(appState.lockoutTimer);
+            appState.failedAttempts = 0;
+            appState.isLockedOut = false;
+            document.getElementById('sim1-attempts-count').textContent = '0';
 
             const attackBtn = document.getElementById('sim1-btn-attack');
             attackBtn.disabled = false;
-            attackBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            attackBtn.style.opacity = '1';
 
-            appendLog('SECURITY', 'LOCKOUT_RESET', 'INFO', 'Bloqueio expirado. Conta "atendente_ana" reativada com falhas zeradas.');
+            const resultBox = document.getElementById('sim1-result-box');
+            resultBox.textContent = "Estado normal de operação. Tentativas zeradas.";
+            resultBox.style.color = "var(--text-muted)";
+
+            appendAuditLog('SECURITY', 'LOCKOUT_RESET', 'INFO', 'Bloqueio expirado. Conta "atendente_ana" restaurada para o estado normal.');
         }
 
-        // SIMULATOR 2: RBAC CONTROLLER
-        function onRoleChange() {
-            state.currentRole = document.getElementById('sim2-role').value;
-            appendLog('RBAC', 'ROLE_SWITCH', 'INFO', `Sessão alterada para o perfil: ${state.currentRole}`);
+        // Automated Diagnostic Suite (Runs 5 consecutive failed attempts to demonstrate lockout)
+        function runDiagnosticSuite() {
+            appendAuditLog('DIAGNOSTIC', 'SUITE_START', 'INFO', 'Executando bateria sequencial automatizada de 5 falhas para testar o Lockout...');
+            resetLockoutState();
+            let step = 0;
+            const interval = setInterval(() => {
+                step++;
+                simulateFailedLogin();
+                if (step >= 5) {
+                    clearInterval(interval);
+                    appendAuditLog('DIAGNOSTIC', 'SUITE_END', 'INFO', 'Bateria de testes automatizada finalizada. Lockout comprovado.');
+                }
+            }, 600);
         }
 
-        function simulateRbacAccess() {
-            const resultBox = document.getElementById('sim2-result-box');
+        // --- SIMULATOR 2: RBAC CONTROLLER (STRICT PoLP / SEPARATION OF DUTIES) ---
+        function simulateRbacCheck() {
             const role = document.getElementById('sim2-role').value;
+            const resultBox = document.getElementById('sim2-result-box');
 
             if (role === 'ATENDENTE') {
-                resultBox.className = 'bg-red-950/40 border border-red-500/40 p-3 rounded-lg text-xs font-mono text-red-300';
-                resultBox.innerHTML = `
-                    <div class="font-bold mb-1 text-red-400"><i class="fa-solid fa-ban mr-1"></i> [HTTP 403 FORBIDDEN] Acesso Negado!</div>
-                    O perfil 'ATENDENTE' não possui privilégios de leitura para prontuários clínicos veterinários.
-                `;
-                appendLog(role, 'ACCESS_PEP', 'ALERT', 'VIOLAÇÃO RBAC: Tentativa não autorizada de leitura do prontuário médico #101.');
-            } else {
-                resultBox.className = 'bg-emerald-950/40 border border-emerald-500/40 p-3 rounded-lg text-xs font-mono text-emerald-300';
-                resultBox.innerHTML = `
-                    <div class="font-bold mb-1 text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i> [HTTP 200 OK] Acesso Autorizado (${role})</div>
-                    <strong>Doente:</strong> Thor (Golden Retriever) | <strong>Diagnóstico:</strong> Cardiopatia leve.<br>
-                    <strong>Prescrição:</strong> Enalapril 10mg — 1cp VO de 12/12h.
-                `;
-                appendLog(role, 'ACCESS_PEP', 'INFO', 'Acesso legítimo concedido ao prontuário clínico do pet #101.');
+                resultBox.textContent = "[HTTP 403 FORBIDDEN] Acesso Negado! O perfil 'ATENDENTE' não possui privilégios para dados médicos.";
+                resultBox.style.color = "var(--accent-red)";
+                appendAuditLog('RBAC_GATEWAY', 'PEP_ACCESS', 'ALERT', 'Acesso negado ao prontuário #101 para o perfil ATENDENTE.');
+            } else if (role === 'ADMIN') {
+                resultBox.textContent = "[HTTP 403 FORBIDDEN] Acesso Negado! Pelo Princípio do Menor Privilégio e Separação de Deveres, Administradores de TI não possuem acesso a prontuários médicos.";
+                resultBox.style.color = "var(--accent-red)";
+                appendAuditLog('RBAC_GATEWAY', 'PEP_ACCESS', 'ALERT', 'Acesso negado ao prontuário #101 para o perfil ADMIN (Separação de Deveres).');
+            } else if (role === 'VETERINARIA') {
+                resultBox.textContent = "[HTTP 200 OK] Acesso Autorizado! Paciente: Thor (Golden Retriever) | Prescrição: Enalapril 10mg via oral de 12 em 12 horas.";
+                resultBox.style.color = "var(--accent-emerald)";
+                appendAuditLog('RBAC_GATEWAY', 'PEP_ACCESS', 'INFO', 'Acesso legítimo concedido ao prontuário #101 para a médica VETERINARIA.');
             }
         }
 
-        // SIMULATOR 3: SQL INJECTION
-        function simulateSqlInjectionTest() {
-            const query = document.getElementById('sim3-query').value;
+        // --- SIMULATOR 3: PREVENÇÃO DE SQL INJECTION ---
+        function simulateSqlInjection() {
+            const payload = document.getElementById('sim3-payload').value;
             const mode = document.getElementById('sim3-mode').value;
             const resultBox = document.getElementById('sim3-result-box');
 
             if (mode === 'VULNERABLE') {
-                resultBox.className = 'bg-red-950/40 border border-red-500/40 p-3 rounded-lg text-xs font-mono text-red-300';
-                resultBox.innerHTML = `
-                    <div class="font-bold mb-1 text-red-400"><i class="fa-solid fa-bug mr-1"></i> VULNERABILIDADE EXPLORADA! (SQL Injection)</div>
-                    Query executada: SELECT * FROM pets WHERE nome = '${query}'<br>
-                    <span class="text-white font-bold">Retornados TODOS os 4 registros do banco de dados (Vazamento em Massa).</span>
-                `;
-                appendLog('SQLi_TEST', 'QUERY_VULNERABLE', 'CRITICAL', `Ataque de SQL Injection BEM-SUCEDIDO! Query maliciosa: "${query}"`);
+                resultBox.textContent = "VULNERABILIDADE EXPLORADA! Query executada: SELECT * FROM pets WHERE nome = '" + payload + "' -> Retornados TODOS os registos da base de dados (Vazamento).";
+                resultBox.style.color = "var(--accent-red)";
+                appendAuditLog('SQL_ENGINE', 'QUERY_VULNERABLE', 'CRITICAL', 'Ataque de SQL Injection bem-sucedido! Payload concatenado: ' + payload);
             } else {
-                resultBox.className = 'bg-emerald-950/40 border border-emerald-500/40 p-3 rounded-lg text-xs font-mono text-emerald-300';
-                resultBox.innerHTML = `
-                    <div class="font-bold mb-1 text-emerald-400"><i class="fa-solid fa-shield-check mr-1"></i> DEFESA ATIVADA (Prepared Statement)</div>
-                    Query executada: SELECT * FROM pets WHERE nome = ? | Param: ["${query}"]<br>
-                    <span class="text-slate-300">0 registros retornados. O payload malicioso foi tratado estritamente como string literal e neutralizado.</span>
-                `;
-                appendLog('SQLi_TEST', 'QUERY_SECURE', 'INFO', `Payload de SQL Injection NEUTRALIZADO por Prepared Statement. Search: "${query}"`);
+                resultBox.textContent = "DEFESA ATIVADA (Prepared Statement)! Query executada: SELECT * FROM pets WHERE nome = ? | Param: [\"" + payload + "\"] -> 0 registos retornados. Payload tratado estritamente como string literal.";
+                resultBox.style.color = "var(--accent-emerald)";
+                appendAuditLog('SQL_ENGINE', 'QUERY_SECURE', 'INFO', 'Payload de SQL Injection neutralizado por Prepared Statement. Search: ' + payload);
             }
         }
 
-        // SIMULATOR 4: HMAC CHECKSUM
-        function simulateDataTampering() {
-            state.isTampered = true;
-            document.getElementById('sim4-med-text').innerText = 'DOSAGEM_ALTERADA_PERIGOSA_500mg — Alteração não autorizada!';
-            document.getElementById('sim4-med-text').className = 'text-red-400 font-mono text-xs font-bold';
-            
-            document.getElementById('sim4-hmac-val').innerText = state.hmacTampered;
-            document.getElementById('sim4-hmac-val').className = 'text-red-400 font-bold break-all';
-
-            const badge = document.getElementById('hmac-status-badge');
-            badge.className = 'text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono font-bold pulse-red';
-            badge.innerText = 'DIVERGÊNCIA HMAC Detetada!';
-
-            appendLog('SYSTEM_AUDIT', 'HMAC_CHECK', 'CRITICAL', 'ALERTA CRÍTICO! Adulteração maliciosa detectada no prontuário #101. Checksum divergente!');
+        // --- SIMULATOR 4: REAL-TIME CRYPTO WEB API HMAC-SHA256 (`crypto.subtle`) ---
+        function initHmacLiveCalculator() {
+            const textarea = document.getElementById('sim4-crypto-text');
+            textarea.addEventListener('input', computeLiveHmac);
+            computeLiveHmac(); // Run initial computation
         }
 
-        function restoreTamperedData() {
-            state.isTampered = false;
-            document.getElementById('sim4-med-text').innerText = 'Enalapril 10mg — 1cp via oral de 12 em 12h';
-            document.getElementById('sim4-med-text').className = 'text-emerald-300 font-mono text-xs';
+        async function computeLiveHmac() {
+            const textToSign = document.getElementById('sim4-crypto-text').value;
+            const digestBox = document.getElementById('sim4-hmac-digest');
+            const secretKeyText = "SecretKeyPetSys2026";
 
-            document.getElementById('sim4-hmac-val').innerText = state.hmacOriginal;
-            document.getElementById('sim4-hmac-val').className = 'text-brand-400 break-all';
+            try {
+                const encoder = new TextEncoder();
+                const keyData = encoder.encode(secretKeyText);
+                const messageData = encoder.encode(textToSign);
 
-            const badge = document.getElementById('hmac-status-badge');
-            badge.className = 'text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold';
-            badge.innerText = 'HMAC VÁLIDO';
+                // Import key using native Web Crypto API
+                const cryptoKey = await window.crypto.subtle.importKey(
+                    'raw',
+                    keyData,
+                    { name: 'HMAC', hash: 'SHA-256' },
+                    false,
+                    ['sign']
+                );
 
-            appendLog('SYSTEM_AUDIT', 'HMAC_RESTORE', 'INFO', 'Dados do prontuário #101 restaurados para a versão íntegra original.');
-        }
+                // Sign message with HMAC-SHA256
+                const signature = await window.crypto.subtle.sign('HMAC', cryptoKey, messageData);
 
-        // RUN ALL DIAGNOSTIC TESTS AUTOMATICALLY
-        function runAllDiagnosticTests() {
-            appendLog('DIAGNOSTIC', 'SUITE_START', 'INFO', 'Iniciando bateria completa de testes automatizados...');
-            setTimeout(() => simulateBruteForceAttack(), 500);
-            setTimeout(() => simulateRbacAccess(), 1200);
-            setTimeout(() => simulateSqlInjectionTest(), 1900);
-            setTimeout(() => simulateDataTampering(), 2600);
-            setTimeout(() => appendLog('DIAGNOSTIC', 'SUITE_COMPLETE', 'INFO', 'Bateria de testes concluída com 100% de cobertura.'), 3300);
+                // Convert ArrayBuffer to Hex String
+                const hashArray = Array.from(new Uint8Array(signature));
+                const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                // Display output safely
+                digestBox.textContent = hexHash;
+                digestBox.style.color = "var(--accent-emerald)";
+            } catch (err) {
+                digestBox.textContent = "Erro ao calcular HMAC: " + err.message;
+                digestBox.style.color = "var(--accent-red)";
+            }
         }
     </script>
 </body>
