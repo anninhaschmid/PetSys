@@ -1,0 +1,4 @@
+petsys_chave.key
+*.db
+*.log
+__pycache__/
