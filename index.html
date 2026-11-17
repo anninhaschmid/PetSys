@@ -603,10 +603,6 @@
                     <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 2v6h.01L7 9.01V18c0 1.66 1.34 3 3 3h4c1.66 0 3-1.34 3-3V9.01L17.99 8H18V2H6zm10 14c0 .55-.45 1-1 1h-4c-.55 0-1-.45-1-1v-5h6v5z"/></svg>
                     Aba 7: Laboratório Prático
                 </button>
-                <button onclick="switchTab('deliverables')" id="tab-btn-deliverables" class="nav-tab">
-                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                    Aba 8: Entregáveis
-                </button>
             </div>
         </nav>
     </header>
@@ -644,7 +640,7 @@
                             <span class="badge badge-emerald">Meta</span> Objetivo do PetSys
                         </div>
                         <p class="subcard-text">
-                            Implantar uma aplicação centralizada para gestão médica e operacional, assegurada por autenticação PBKDF2 com Salt, controle RBAC rigoroso, segmentação de rede por VLANs e trilhas de auditoria imutáveis.
+                            Implantar uma aplicação centralizada para gestão médica e operacional, assegurada por autenticação PBKDF2 com Salt, controle RBAC rigoroso, segmentação de rede por VLANs e trilhas de auditoria encadeadas por hash (que detectam adulteração).
                         </p>
                     </div>
 
@@ -700,7 +696,7 @@
                                 <strong style="font-size: 0.85rem; color: #fff;">Credenciais & Logs</strong>
                                 <span class="badge badge-purple">Segurança</span>
                             </div>
-                            <p class="subcard-text">Hashes criptográficos PBKDF2, salts de 16 bytes, assinaturas HMAC-SHA256 e logs Syslog RFC 5424.</p>
+                            <p class="subcard-text">Hashes criptográficos PBKDF2, salts aleatórios de 16 bytes, assinaturas HMAC-SHA256 e logs Syslog RFC 5424.</p>
                         </div>
                     </div>
                 </article>
@@ -808,12 +804,12 @@
                             <tr>
                                 <td><strong style="color: var(--accent-purple);">Autenticidade</strong></td>
                                 <td>Como validar a real identidade dos usuários?</td>
-                                <td>Hash PBKDF2 com 100.000 iterações, Salt individual de 16 bytes e bloqueio de conta (*Account Lockout*) após 5 falhas.</td>
+                                <td>Hash PBKDF2 com 600.000 iterações, Salt aleatório de 16 bytes por usuário e bloqueio de conta (*Account Lockout*) após 5 falhas.</td>
                             </tr>
                             <tr>
                                 <td><strong style="color: #f472b6;">Não-repúdio</strong></td>
-                                <td>Como comprovar irrefutavelmente a autoria das ações?</td>
-                                <td>Trilhas contínuas de audit log em formato Syslog RFC 5424 com carimbo de data/hora UTC e ID do usuário.</td>
+                                <td>Como comprovar de forma verificável a autoria das ações?</td>
+                                <td>Trilhas de audit log em formato Syslog RFC 5424, com horário UTC, ID do usuário e encadeamento por hash para detectar adulteração. Para não-repúdio pleno, o ideal seria assinar os registros com chave assimétrica.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1066,7 +1062,7 @@
                         </div>
 
                         <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
-                            <span>Chave HMAC Secreta: <code style="color: var(--accent-cyan);">ChaveSecretaHMACPetSys2026AmigoFiel</code></span>
+                            <span>Chave HMAC Secreta: (chave de demonstração do laboratório; no sistema real ela fica fora do código) <code style="color: var(--accent-cyan);">ChaveSecretaHMACPetSys2026AmigoFiel</code></span>
                             <span>Digest HMAC-SHA256 Calculado Live (Web Crypto API):</span>
                             <div id="sim4-hmac-digest" class="result-box" style="color: var(--accent-emerald); font-size: 0.75rem;">Calculando...</div>
                         </div>
@@ -1099,118 +1095,7 @@
             </article>
         </section>
 
-        <!-- ------------------------------------------------------------------- -->
-        <!-- ABA 8: ENTREGÁVEIS DO PROJETO -->
-        <!-- ------------------------------------------------------------------- -->
-        <section id="tab-content-deliverables" class="tab-section">
-            <article class="card">
-                <div class="card-header">
-                    <div class="card-title-group">
-                        <span class="card-tag">Entregáveis Oficiais do Projeto A3</span>
-                        <h1 class="card-title">Documentação Acadêmica & Código Python Integrados</h1>
-                        <p class="card-desc">Visualize o relatório final, o roteiro de slides para apresentação e o código Python backend funcional.</p>
-                    </div>
-                </div>
 
-                <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
-                    <button onclick="switchDeliverable('report')" id="deliv-btn-report" class="btn">Relatório Acadêmico</button>
-                    <button onclick="switchDeliverable('python')" id="deliv-btn-python" class="btn btn-secondary">Código Backend Python (petsys_sistema.py)</button>
-                </div>
-
-                <!-- RELATÓRIO ACADÊMICO -->
-                <div id="deliv-view-report" class="subcard" style="font-size: 0.85rem; line-height: 1.6;">
-                    <h2 style="color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 8px;">Relatório Acadêmico Final — Projeto A3 Sistemas Computacionais e Segurança</h2>
-                    <p><strong>Organização Estudada:</strong> PetShop & Clínica Veterinária Amigo Fiel</p>
-                    <p><strong>Resumo Executivo:</strong> O presente trabalho apresenta o projeto completo de engenharia de segurança de informação para a clínica veterinária Amigo Fiel. A infraestrutura digitalizada foi concebida para proteger o Prontuário Eletrônico (PEP) dos animais e os dados pessoais (PII) dos tutores em estrita conformidade com a LGPD e normas internacionais ISO 27001 e NIST SP 800.</p>
-                    <h3 style="color: var(--accent-cyan); font-size: 0.95rem; margin-top: 14px;">Síntese dos Resultados Técnicos:</h3>
-                    <ul style="padding-left: 20px; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
-                        <li>Autenticação robusta utilizando algoritmos PBKDF2 com 100.000 iterações e Salts individuais de 16 bytes.</li>
-                        <li>Implementação da política de Account Lockout ativada após 5 falhas consecutivas de login.</li>
-                        <li>Segregação de privilégios RBAC aplicando o Princípio do Menor Privilégio e Separação de Deveres entre atendimento, saúde animal e suporte de TI.</li>
-                        <li>Verificação de integridade para prevenir modificações não autorizadas em históricos médicos.</li>
-                        <li>Rede corporativa dividida em 4 VLANs com borda protegida por Firewall NGFW e WAF ModSecurity.</li>
-                    </ul>
-                </div>
-
-                <!-- SLIDES DE APRESENTAÇÃO -->
-                <div id="deliv-view-slides" class="subcard" style="display: none;">
-                    <h2 style="color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--bg-card-border); padding-bottom: 8px;">Roteiro de Apresentação Oral (15 Minutos / 12 Slides)</h2>
-                    <div class="grid-3" style="margin-top: 12px;">
-                        <div class="subcard">
-                            <strong style="color: var(--accent-cyan);">Slides 1 - 3 (00:00 - 04:00)</strong>
-                            <p class="subcard-text">Apresentação da clínica Amigo Fiel, transição do papel para o digital, riscos da LGPD e arquitetura de redes em 4 VLANs.</p>
-                        </div>
-                        <div class="subcard">
-                            <strong style="color: var(--accent-emerald);">Slides 4 - 8 (04:00 - 09:30)</strong>
-                            <p class="subcard-text">Mapeamento CIAAN, hashing PBKDF2+Salt, regras de RBAC com Separação de Deveres, backup 3-2-1 e Matriz de 5 Riscos.</p>
-                        </div>
-                        <div class="subcard">
-                            <strong style="color: var(--accent-amber);">Slides 9 - 12 (09:30 - 15:00)</strong>
-                            <p class="subcard-text">Autoavaliação crítica de 3 vulnerabilidades, demonstração interativa dos 4 simuladores e conclusões finais.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CÓDIGO PYTHON -->
-                <div id="deliv-view-python" class="subcard" style="display: none;">
-                    <div style="display: flex; justify-between; align-items: center; margin-bottom: 8px;">
-                        <h2 style="color: #fff; font-size: 1.1rem;">Código Backend Completo em Python (`petsys_sistema.py`)</h2>
-                        <button onclick="copyPythonScriptText()" class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 12px;">
-                            Copiar Código Python
-                        </button>
-                    </div>
-                    <pre id="python-script-container" class="result-box" style="white-space: pre-wrap; font-size: 0.75rem; color: #a7f3d0; max-height: 400px; overflow-y: auto;">
-import sqlite3
-import hashlib
-import hmac
-import time
-from datetime import datetime, timezone
-
-ARQUIVO_DB = "petsys_producao.db"
-ARQUIVO_LOG = "petsys_auditoria.log"
-CHAVE_HMAC_MESTRE = b"ChaveSecretaHMACPetSys2026AmigoFiel"
-
-def gravar_log_auditoria(username, acao, status, detalhes=""):
-    agora = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-    linha_log = f"[{agora}] UTILIZADOR='{username}' | AÇÃO='{acao}' | STATUS='{status}' | {detalhes}\n"
-    with open(ARQUIVO_LOG, "a", encoding="utf-8") as f:
-        f.write(linha_log)
-
-def inicializar_banco_dados():
-    conn = sqlite3.connect(ARQUIVO_DB)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            nome TEXT NOT NULL,
-            perfil TEXT NOT NULL,
-            salt TEXT NOT NULL,
-            senha_hash TEXT NOT NULL,
-            tentativas_erradas INTEGER DEFAULT 0,
-            bloqueado_ate REAL DEFAULT 0
-        )
-    ''')
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS prontuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            pet_nome TEXT NOT NULL,
-            especie TEXT NOT NULL,
-            tutor TEXT NOT NULL,
-            historico_clinico TEXT NOT NULL,
-            hmac_checksum TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-if __name__ == "__main__":
-    inicializar_banco_dados()
-    print("PetSys Security Engine Python Backend Inicializado.")
-                    </pre>
-                </div>
-            </article>
-        </section>
 
     </main>
 
@@ -1308,7 +1193,7 @@ if __name__ == "__main__":
             while (container.firstChild) {
                 container.removeChild(container.firstChild);
             }
-            appendAuditLog('AUDITORIA_DEMO', 'LIMPEZA_TELA', 'WARN', 'A limpeza do console local limpa apenas a exibição visual do painel de demonstração. Os registos oficiais de auditoria são imutáveis e gravados no servidor.');
+            appendAuditLog('AUDITORIA_DEMO', 'LIMPEZA_TELA', 'WARN', 'A limpeza do console local limpa apenas a exibição visual do painel de demonstração. Os registros oficiais de auditoria ficam em arquivo no servidor, encadeados por hash para detectar adulteração.');
         }
 
         // Navigation Controller
@@ -1321,16 +1206,6 @@ if __name__ == "__main__":
             document.getElementById('tab-btn-' + tabId).classList.add('active');
 
             appendAuditLog('NAVEGADOR', 'MUDANCA_ABA', 'INFO', 'Navegou para a seção: ' + tabId.toUpperCase());
-        }
-
-        function switchDeliverable(type) {
-            document.getElementById('deliv-view-report').style.display = type === 'report' ? 'block' : 'none';
-            document.getElementById('deliv-view-slides').style.display = type === 'slides' ? 'block' : 'none';
-            document.getElementById('deliv-view-python').style.display = type === 'python' ? 'block' : 'none';
-
-            document.getElementById('deliv-btn-report').className = type === 'report' ? 'btn' : 'btn btn-secondary';
-            document.getElementById('deliv-btn-slides').className = type === 'slides' ? 'btn' : 'btn btn-secondary';
-            document.getElementById('deliv-btn-python').className = type === 'python' ? 'btn' : 'btn btn-secondary';
         }
 
         function inspectArchNode(nodeKey) {
@@ -1485,12 +1360,6 @@ if __name__ == "__main__":
             }
         }
 
-        function copyPythonScriptText() {
-            const text = document.getElementById('python-script-container').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                appendAuditLog('UTILITARIO', 'COPIA_CODIGO', 'INFO', 'Código Python copiado para a área de transferência.');
-            });
-        }
     </script>
 </body>
 </html>
