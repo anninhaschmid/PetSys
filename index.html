@@ -569,7 +569,7 @@
 
             <div class="status-pill">
                 <span class="status-dot"></span>
-                <span>Sistema Operacional • WAF & ModSecurity Ativos</span>
+                <span>Protótipo acadêmico • demonstração local</span>
             </div>
         </div>
 
@@ -611,11 +611,29 @@
     <!-- MAIN CONTENT AREA CONTAINER -->
     <!-- ======================================================================= -->
     <main>
-
         <!-- ------------------------------------------------------------------- -->
         <!-- ABA 1: CONTEXTO E ORGANIZAÇÃO -->
         <!-- ------------------------------------------------------------------- -->
         <section id="tab-content-context" class="tab-section active">
+            <article class="card" style="border-color: rgba(56, 189, 248, 0.4);">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="card-tag">Escopo da demonstração</span>
+                        <h2 class="card-title" style="font-size: 1.05rem;">O que funciona e o que é uma proposta</h2>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="subcard">
+                        <div class="subcard-title"><span class="badge badge-emerald">Demonstrado</span> Protótipo local</div>
+                        <p class="subcard-text">O <code>banco.py</code> demonstra autenticação PBKDF2, bloqueio de login, RBAC, integridade HMAC em prontuários SQLite e log local encadeado por hash. Os simuladores desta página são demonstrações independentes no navegador; não se conectam ao banco Python.</p>
+                    </div>
+                    <div class="subcard">
+                        <div class="subcard-title"><span class="badge badge-amber">Previsto</span> Arquitetura proposta</div>
+                        <p class="subcard-text">VLANs, NGFW/WAF, Nginx, PostgreSQL, AES-256 em repouso, TLS, RAID, nobreak, backup 3-2-1 e SIEM remoto são itens do projeto conceitual. Não estão configurados nem implementados neste protótipo.</p>
+                    </div>
+                </div>
+            </article>
+
             <article class="card">
                 <div class="card-header">
                     <div class="card-title-group">
@@ -712,7 +730,7 @@
                     <div class="card-title-group">
                         <span class="card-tag">Etapa 2 • Infraestrutura & Topologia</span>
                         <h1 class="card-title">Arquitetura de Rede e Segmentação por VLANs</h1>
-                        <p class="card-desc">Rede corporativa dividida em 4 sub-redes virtuais com Firewall NGFW e inspeção WAF ModSecurity na borda.</p>
+                        <p class="card-desc">Representação da arquitetura proposta. As VLANs, o firewall e o WAF não são configurados pelo protótipo.</p>
                     </div>
                 </div>
 
@@ -782,34 +800,34 @@
                             <tr>
                                 <th>Princípio (CIAAN)</th>
                                 <th>Questão Central</th>
-                                <th>Mecanismo Técnico Implementado no PetSys</th>
+                                <th>Implementação no protótipo / proposta do projeto</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><strong style="color: var(--accent-cyan);">Confidencialidade</strong></td>
                                 <td>Como garantir que apenas autorizados acessem os dados?</td>
-                                <td>Controle RBAC estrito com restrição ao PEP para Atendentes e Admin, mais encriptação transparente AES-256 no banco de dados.</td>
+                                <td>Implementado: RBAC restringe a leitura do prontuário. Previsto: criptografia AES-256 em repouso; não implementada.</td>
                             </tr>
                             <tr>
                                 <td><strong style="color: var(--accent-emerald);">Integridade</strong></td>
                                 <td>Como garantir que as informações não sejam alteradas?</td>
-                                <td>Assinatura criptográfica HMAC-SHA256 validando cada prontuário e Prepared Statements contra SQL Injection.</td>
+                                <td>Implementado: HMAC-SHA256 nos prontuários e consultas parametrizadas no SQLite. O simulador SQLi do painel é independente do banco.</td>
                             </tr>
                             <tr>
                                 <td><strong style="color: var(--accent-amber);">Disponibilidade</strong></td>
                                 <td>Como manter os serviços ativos sem interrupções?</td>
-                                <td>Nobreak UPS 1200VA com autonomia para desligamento seguro, RAID 1 de espelhamento e política de backup 3-2-1.</td>
+                                <td>Previsto no projeto: nobreak UPS 1200VA, RAID 1 e backup 3-2-1. Não implementados no protótipo.</td>
                             </tr>
                             <tr>
                                 <td><strong style="color: var(--accent-purple);">Autenticidade</strong></td>
                                 <td>Como validar a real identidade dos usuários?</td>
-                                <td>Hash PBKDF2 com 600.000 iterações, Salt aleatório de 16 bytes por usuário e bloqueio de conta (*Account Lockout*) após 5 falhas.</td>
+                                <td>Implementado em <code>banco.py</code>: PBKDF2 com 600.000 iterações, salt aleatório de 16 bytes e bloqueio após 5 falhas.</td>
                             </tr>
                             <tr>
                                 <td><strong style="color: #f472b6;">Não-repúdio</strong></td>
                                 <td>Como comprovar de forma verificável a autoria das ações?</td>
-                                <td>Trilhas de audit log em formato Syslog RFC 5424, com horário UTC, ID do usuário e encadeamento por hash para detectar adulteração. Para não-repúdio pleno, o ideal seria assinar os registros com chave assimétrica.</td>
+                                <td>Implementado em <code>banco.py</code>: log local em formato RFC 5424, horário UTC e encadeamento por hash para detectar adulteração. Isso não comprova autoria; não-repúdio pleno exigiria assinatura assimétrica. O console desta página é apenas visual.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -986,7 +1004,7 @@
                     <div class="card-title-group">
                         <span class="card-tag" style="color: var(--accent-amber);">Etapa 7 • Demonstração Prática</span>
                         <h1 class="card-title">Laboratório Interativo de Cibersegurança</h1>
-                        <p class="card-desc">Execute os 4 simuladores práticos e acompanhe as respostas de defesa refletidas na auditoria em tempo real.</p>
+                        <p class="card-desc">Execute quatro simuladores locais no navegador. Eles não executam ataques nem consultam o banco real do protótipo.</p>
                     </div>
                     <button onclick="runDiagnosticSuite()" class="btn btn-purple">
                         Executar Teste Automatizado de Lockout (5 Falhas)
@@ -1000,7 +1018,7 @@
                         <div class="subcard-title" style="color: var(--accent-red);">
                             1. Rate Limiting & Account Lockout
                         </div>
-                        <p class="subcard-text">Tente autenticar com senha incorreta. Após 5 falhas seguidas, a conta é bloqueada por 30 segundos.</p>
+                        <p class="subcard-text">Tente autenticar com senha incorreta. Após 5 falhas seguidas, a conta é bloqueada por 60 segundos.</p>
 
                         <div class="form-group">
                             <label>Usuário de Teste</label>
@@ -1055,6 +1073,7 @@
                             3. Integrity Checksum HMAC-SHA256 (Web Crypto API)
                         </div>
                         <p class="subcard-text">Edite a prescrição abaixo. A Web Crypto API (<code>crypto.subtle</code>) calcula a assinatura HMAC em tempo real no browser.</p>
+                        <p class="subcard-text" style="border-left: 3px solid var(--accent-amber); padding: 8px 10px; color: var(--accent-amber);">Demonstração acadêmica: a chave abaixo está visível no código-fonte e não é secreta. Este cálculo ocorre somente no navegador e não usa a chave nem os prontuários de <code>banco.py</code>. Não use esta chave para proteger dados reais.</p>
 
                         <div class="form-group">
                             <label>Prescrição Médica (Edite para ver a alteração ao vivo):</label>
@@ -1062,7 +1081,7 @@
                         </div>
 
                         <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
-                            <span>Chave HMAC Secreta: (chave de demonstração do laboratório; no sistema real ela fica fora do código) <code style="color: var(--accent-cyan);">ChaveSecretaHMACPetSys2026AmigoFiel</code></span>
+                            <span>Chave HMAC de demonstração (pública): <code style="color: var(--accent-cyan);">ChaveSecretaHMACPetSys2026AmigoFiel</code></span>
                             <span>Digest HMAC-SHA256 Calculado Live (Web Crypto API):</span>
                             <div id="sim4-hmac-digest" class="result-box" style="color: var(--accent-emerald); font-size: 0.75rem;">Calculando...</div>
                         </div>
@@ -1100,13 +1119,13 @@
     </main>
 
     <!-- ======================================================================= -->
-    <!-- PERSISTENT REAL-TIME SYSLOG AUDIT TERMINAL -->
+    <!-- LOCAL VISUAL AUDIT EVENT DEMONSTRATION -->
     <!-- ======================================================================= -->
     <footer class="terminal-container">
         <div class="terminal-header">
             <div class="terminal-title">
                 <svg class="icon-svg" style="color: var(--accent-cyan);" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
-                TRILHA DE AUDITORIA DE SEGURANÇA EM TEMPO REAL (Syslog RFC 5424 / Standard Output)
+                EVENTOS VISUAIS DA DEMONSTRAÇÃO (não são um Syslog real)
             </div>
             <button onclick="clearAuditTerminalDemo()" class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 10px;">
                 Limpar Tela do Console (Demonstração Local)
@@ -1119,7 +1138,7 @@
     </footer>
 
     <!-- ======================================================================= -->
-    <!-- JAVASCRIPT APP ENGINE (100% SECURE & XSS FREE) -->
+    <!-- LOCAL DEMONSTRATION PANEL ENGINE -->
     <!-- ======================================================================= -->
     <script>
         // State Management
@@ -1131,18 +1150,18 @@
         };
 
         const nodeDescriptions = {
-            ngfw: "Firewall NGFW + ModSecurity WAF: Regras de borda inspecionando o tráfego HTTP/HTTPS, bloqueando payloads maliciosos de SQLi e XSS, e aplicando restrições de porta.",
-            vlan10: "VLAN 10 — Recepção (Atendimento): Sub-rede restrita aos computadores de atendimento. Permite cadastros de tutores e agendamentos. Acesso bloqueado ao Prontuário Médico.",
-            vlan20: "VLAN 20 — Consultórios Médicos: Sub-rede autenticada com acesso exclusivo dos médicos veterinários ao Prontuário Eletrônico (PEP) para consulta e prescrição.",
-            vlan30: "VLAN 30 — Servidores DMZ: Hospeda o servidor web Nginx, backend Python e o PostgreSQL com encriptação transparente dos dados em disco (AES-256).",
-            vlan40: "VLAN 40 — Wi-Fi Visitantes: Rede sem fio de convidados totalmente isolada por firewall, sem qualquer acesso à rede interna corporativa ou aos servidores."
+            ngfw: "Proposta de arquitetura — Firewall NGFW + ModSecurity WAF na borda. Não está configurado neste protótipo.",
+            vlan10: "Proposta de arquitetura — VLAN 10 para recepção, sem acesso ao prontuário. Não está configurada neste protótipo.",
+            vlan20: "Proposta de arquitetura — VLAN 20 para consultórios e acesso veterinário ao PEP. Não está configurada neste protótipo.",
+            vlan30: "Proposta de arquitetura — VLAN 30 para servidores Nginx, backend e PostgreSQL com AES-256. Esses serviços não estão implementados neste protótipo.",
+            vlan40: "Proposta de arquitetura — VLAN 40 isolada para Wi-Fi de visitantes. Não está configurada neste protótipo."
         };
 
         // Initialize App on Load
         window.addEventListener('DOMContentLoaded', () => {
-            appendAuditLog('SISTEMA', 'INICIALIZACAO', 'INFO', 'Motor de Cibersegurança do PetSys iniciado com sucesso.');
-            appendAuditLog('FIREWALL', 'REGRA_VLAN', 'INFO', 'Segmentação por 4 VLANs e WAF ModSecurity ativados.');
-            appendAuditLog('AUDITORIA', 'SYSLOG_STREAM', 'INFO', 'Trilha contínua RFC 5424 em execução.');
+            appendAuditLog('PAINEL_DEMO', 'INICIALIZACAO', 'INFO', 'Painel acadêmico de demonstração iniciado no navegador.');
+            appendAuditLog('ARQUITETURA_PROPOSTA', 'VLAN_WAF', 'INFO', 'VLANs e WAF são representados visualmente; não estão ativos.');
+            appendAuditLog('AUDITORIA_DEMO', 'EVENTOS_VISUAIS', 'INFO', 'Console local de demonstração; não é um serviço Syslog.');
             initHmacLiveCalculator();
         });
 
@@ -1235,12 +1254,12 @@
                 attackBtn.disabled = true;
                 attackBtn.style.opacity = '0.5';
 
-                resultBox.textContent = "ALERTA DE SEGURANÇA: 5 tentativas falhadas excedidas! Conta 'atendente_ana' BLOQUEADA por 30 segundos.";
+                resultBox.textContent = "ALERTA DE SEGURANÇA: 5 tentativas falhadas excedidas! Conta 'atendente_ana' BLOQUEADA por 60 segundos.";
                 resultBox.style.color = "var(--accent-red)";
 
                 appendAuditLog('SEGURANCA', 'ACCOUNT_LOCKOUT', 'CRITICAL', 'Limite de 5 falhas atingido! Conta "atendente_ana" bloqueada temporariamente.');
 
-                let countdown = 30;
+                let countdown = 60;
                 appState.lockoutTimer = setInterval(() => {
                     countdown--;
                     resultBox.textContent = "CONTA BLOQUEADA: 'atendente_ana' trancada por segurança (" + countdown + "s restantes).";

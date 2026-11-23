@@ -72,7 +72,7 @@ Usa apenas a biblioteca padrão do Python 3.8+ (`sqlite3`, `hashlib`, `hmac`, `j
 
 ## 🌐 Painel Web (`index.html`)
 
-Página única e **100% offline**, sem dependências externas, que usa `textContent` e `createTextNode` para evitar XSS baseado em DOM. Possui 8 abas: Contexto, Arquitetura, Mecanismos, Ativos & Ameaças, Matriz de Riscos, Autoavaliação, Laboratório Prático e Entregáveis.
+Página única e **100% offline**, sem dependências externas, que usa `textContent` e `createTextNode` para evitar XSS baseado em DOM. Possui 7 abas: Contexto, Arquitetura, Mecanismos, Ativos & Ameaças, Matriz de Riscos, Autoavaliação e Laboratório Prático. Os itens relacionados aos entregáveis são apresentados dentro das seções já existentes.
 
 O **Laboratório Prático** reúne simuladores de força bruta com lockout, SQL Injection (concatenação vs. consulta parametrizada), HMAC-SHA256 ao vivo e controle RBAC. Os simuladores do painel são **independentes** do `banco.py`: rodam no navegador, em JavaScript.
 
@@ -85,18 +85,45 @@ Abra o `index.html` com duplo clique em qualquer navegador moderno. Não precisa
 
 ### Protótipo Python
 
-```bash
-# 1. (primeira vez) remova arquivos de versões anteriores, se existirem
-rm -f petsys_producao.db petsys_auditoria.log
+Abra o PowerShell ou o CMD na pasta do projeto. No Windows, use os comandos abaixo.
 
-# 2. (opcional) defina a chave HMAC por variável de ambiente
-export PETSYS_HMAC_KEY="troque-por-uma-chave-longa-e-aleatoria"
+#### PowerShell
 
-# 3. execute a demonstração
+```powershell
+# Opcional: apaga o banco e o log de uma execução anterior (não apaga a chave HMAC)
+Remove-Item .\petsys_producao.db, .\petsys_auditoria.log -ErrorAction SilentlyContinue
+
+# Opcional: defina a chave HMAC apenas para esta janela do PowerShell
+$env:PETSYS_HMAC_KEY = "troque-por-uma-chave-longa-e-aleatoria"
+
+python .\banco.py
+```
+
+#### Prompt de Comando (CMD)
+
+```cmd
+REM Opcional: apaga o banco e o log de uma execução anterior (não apaga a chave HMAC)
+del petsys_producao.db petsys_auditoria.log 2>nul
+
+REM Opcional: defina a chave HMAC apenas para esta janela do CMD
+set PETSYS_HMAC_KEY=troque-por-uma-chave-longa-e-aleatoria
+
 python banco.py
 ```
 
-Se `PETSYS_HMAC_KEY` não estiver definida, o programa gera `petsys_chave.key` automaticamente. **Não envie esse arquivo ao repositório.**
+No macOS/Linux, os comandos equivalentes são:
+
+```bash
+# Opcional: apaga o banco e o log de uma execução anterior (não apaga a chave HMAC)
+rm -f petsys_producao.db petsys_auditoria.log
+
+# Opcional: defina a chave HMAC para esta sessão
+export PETSYS_HMAC_KEY="troque-por-uma-chave-longa-e-aleatoria"
+
+python banco.py
+```
+
+Se `PETSYS_HMAC_KEY` não estiver definida, o programa gera `petsys_chave.key` automaticamente. **Não envie esse arquivo ao repositório.** A remoção do banco apaga os dados locais da demonstração; pule esse comando se quiser preservá-los.
 
 ### Resultado esperado
 
